@@ -1,0 +1,57 @@
+{
+  "name": "browser-extension-settings",
+  "version": "0.0.3",
+  "description": "Settings module for developing browser extensions and userscripts",
+  "type": "module",
+  "main": "./lib/index.ts",
+  "scripts": {
+    "p": "prettier --write .",
+    "lint": "prettier --write . && xo --fix",
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/utags/browser-extension-settings.git"
+  },
+  "keywords": [
+    "extensions",
+    "userscripts",
+    "settings"
+  ],
+  "author": "Pipecraft",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/utags/browser-extension-settings/issues"
+  },
+  "homepage": "https://github.com/utags/browser-extension-settings#readme",
+  "dependencies": {
+    "browser-extension-storage": "^0.1.2",
+    "browser-extension-utils": "^0.1.4"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.237",
+    "prettier": "^2.8.8",
+    "xo": "^0.54.2"
+  },
+  "files": [
+    "lib/",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": "^14.13.1 || >=16.0.0"
+  },
+  "xo": {
+    "space": 2,
+    "prettier": true,
+    "globals": [
+      "document"
+    ],
+    "rules": {
+      "prefer-destructuring": 0,
+      "import/extensions": 0,
+      "@typescript-eslint/prefer-nullish-coalescing": 0,
+      "capitalized-comments": 0
+    }
+  }
+}
