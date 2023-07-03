@@ -99,6 +99,20 @@ export const activeExtension = (id: string) => {
   }
 }
 
+export const activeExtensionList = () => {
+  const extensionListContainer = $(".extension_list_container")
+  if (extensionListContainer) {
+    addClass(extensionListContainer, "bes_active")
+  }
+}
+
+export const deactiveExtensionList = () => {
+  const extensionListContainer = $(".extension_list_container")
+  if (extensionListContainer) {
+    removeClass(extensionListContainer, "bes_active")
+  }
+}
+
 const createInstalledExtension = (installedExtension: InstalledExtension) => {
   const div = createElement("div", {
     class: "installed_extension",
@@ -120,7 +134,7 @@ const updateRelatedExtensions = (container: HTMLElement) => {
   container.innerHTML = ""
 
   for (const relatedExtension of relatedExtensions) {
-    console.log(relatedExtension)
+    // console.log(relatedExtension)
 
     if (isInstalledExtension(relatedExtension.id)) {
       continue
@@ -154,7 +168,7 @@ export function createExtensionList(installedExtensions: InstalledExtension[]) {
     class: "installed_extension_list",
   })
   for (const installedExtension of installedExtensions) {
-    console.log(installedExtension)
+    // console.log(installedExtension)
 
     if (isInstalledExtension(installedExtension.id)) {
       continue

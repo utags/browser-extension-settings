@@ -187,6 +187,7 @@
   }
 
   .option_groups textarea {
+    font-size: 12px;
     margin: 10px 0 10px 0;
     height: 100px;
     width: 100%;
@@ -358,4 +359,26 @@
 
 #browser_extension_side_menu button:active {
   opacity: 100%;
+}
+
+@media (max-width: 500px) {
+  #browser_extension_settings_container {
+    right: 10px;
+
+    .extension_list_container {
+      display: none;
+    }
+    .extension_list_container.bes_active {
+      display: block;
+    }
+    .extension_list_container.bes_active + div {
+      display: none;
+    }
+  }
+
+  #browser_extension_settings_main {
+    a.navigation_go_previous {
+      display: block;
+    }
+  }
 }

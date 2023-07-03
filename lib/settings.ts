@@ -6,6 +6,7 @@ import {
 import {
   $,
   $$,
+  addClass,
   addElement,
   addEventListener,
   addStyle,
@@ -19,8 +20,10 @@ import {
   createExtensionList,
   addCurrentExtension,
   activeExtension,
+  activeExtensionList,
+  deactiveExtensionList,
 } from "./extension-list"
-import { version } from "./common"
+import { besVersion } from "./common"
 
 const prefix = "browser_extension_settings_"
 
@@ -148,9 +151,9 @@ function getSettingsContainer() {
   const container = $(`.${prefix}container`)
   if (container) {
     const theVersion = Number.parseInt(container.dataset.besVersion || "0", 10)
-    if (theVersion < version) {
+    if (theVersion < besVersion) {
       container.id = settingsContainerId
-      container.dataset.besVersion = String(version)
+      container.dataset.besVersion = String(besVersion)
     }
 
     return container
@@ -159,7 +162,7 @@ function getSettingsContainer() {
   return addElement(doc.body, "div", {
     id: settingsContainerId,
     class: `${prefix}container`,
-    "data-bes-version": version,
+    "data-bes-version": besVersion,
   })
 }
 
@@ -209,7 +212,7 @@ function createSettingsElement() {
       textContent: "Settings",
       class: "navigation_go_previous",
       onclick() {
-        console.log(1)
+        activeExtensionList()
       },
     })
 
@@ -306,14 +309,14 @@ function addSideMenu() {
     $("#browser_extension_side_menu") ||
     addElement(doc.body, "div", {
       id: "browser_extension_side_menu",
-      "data-bes-version": version,
+      "data-bes-version": besVersion,
     })
 
   const button = $("button[data-bes-version]", menu)
 
   if (button) {
     const theVersion = Number.parseInt(button.dataset.besVersion || "0", 10)
-    if (theVersion >= version) {
+    if (theVersion >= besVersion) {
       return
     }
 
@@ -322,7 +325,7 @@ function addSideMenu() {
 
   addElement(menu, "button", {
     type: "button",
-    "data-bes-version": version,
+    "data-bes-version": besVersion,
     title: "设置",
     onclick() {
       setTimeout(showSettings, 1)
@@ -339,6 +342,7 @@ export async function showSettings() {
 
   addEventListener(document, "click", modalHandler)
   activeExtension(settingsOptions.id)
+  deactiveExtensionList()
 }
 
 export const initSettings = async (options: SettingsOptions) => {
