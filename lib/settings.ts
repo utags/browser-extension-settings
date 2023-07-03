@@ -97,7 +97,17 @@ export function getSettingsValue(key: string): boolean | string | undefined {
     : settingsTable[key]?.defaultValue
 }
 
-const modalHandler = (event) => {
+const closeModal = () => {
+  const settingsContainer = getSettingsContainer()
+  if (settingsContainer) {
+    settingsContainer.style.display = "none"
+  }
+
+  removeEventListener(document, "click", onDocumentClick)
+  removeEventListener(document, "keydown", onDocumentKeyDown)
+}
+
+const onDocumentClick = (event) => {
   let target = event.target as HTMLElement
   const settingsContainer = getSettingsContainer()
   if (settingsContainer) {
@@ -108,11 +118,30 @@ const modalHandler = (event) => {
     if (target === settingsContainer) {
       return
     }
-
-    settingsContainer.style.display = "none"
   }
 
-  removeEventListener(document, "click", modalHandler)
+  closeModal()
+}
+
+const onDocumentKeyDown = (event) => {
+  if (event.defaultPrevented) {
+    return // 如果事件已经在进行中，则不做任何事。
+  }
+
+  switch (event.key) {
+    case "Escape": {
+      // 按“ESC”键时要做的事。
+      closeModal()
+      break
+    }
+
+    default: {
+      return
+    } // 什么都没按就退出吧。
+  }
+
+  // 取消默认动作，从而避免处理两次。
+  event.preventDefault()
 }
 
 async function updateOptions() {
@@ -340,7 +369,8 @@ export async function showSettings() {
   await updateOptions()
   settingsContainer.style.display = "block"
 
-  addEventListener(document, "click", modalHandler)
+  addEventListener(document, "click", onDocumentClick)
+  addEventListener(document, "keydown", onDocumentKeyDown)
   activeExtension(settingsOptions.id)
   deactiveExtensionList()
 }
