@@ -103,8 +103,8 @@ const closeModal = () => {
     settingsContainer.style.display = "none"
   }
 
-  removeEventListener(document, "click", onDocumentClick)
-  removeEventListener(document, "keydown", onDocumentKeyDown)
+  removeEventListener(document, "click", onDocumentClick, true)
+  removeEventListener(document, "keydown", onDocumentKeyDown, true)
 }
 
 const onDocumentClick = (event: Event) => {
@@ -121,20 +121,12 @@ const onDocumentKeyDown = (event: KeyboardEvent) => {
     return // 如果事件已经在进行中，则不做任何事。
   }
 
-  switch (event.key) {
-    case "Escape": {
-      // 按“ESC”键时要做的事。
-      closeModal()
-      break
-    }
-
-    default: {
-      return
-    } // 什么都没按就退出吧。
+  if (event.key === "Escape") {
+    // 按“ESC”键时要做的事。
+    closeModal()
+    // 取消默认动作，从而避免处理两次。
+    event.preventDefault()
   }
-
-  // 取消默认动作，从而避免处理两次。
-  event.preventDefault()
 }
 
 async function updateOptions() {
@@ -369,8 +361,8 @@ export async function showSettings() {
   await updateOptions()
   settingsContainer.style.display = "block"
 
-  addEventListener(document, "click", onDocumentClick)
-  addEventListener(document, "keydown", onDocumentKeyDown)
+  addEventListener(document, "click", onDocumentClick, true)
+  addEventListener(document, "keydown", onDocumentKeyDown, true)
   activeExtension(settingsOptions.id)
   deactiveExtensionList()
 }
