@@ -67,7 +67,7 @@ const settingsContainerId = prefix + "container_" + randomId
 const settingsElementId = prefix + "main_" + randomId
 const getSettingsElement = () => $("#" + settingsElementId)
 const getSettingsStyle: () => string = () =>
-  styleText
+  (styleText as string)
     .replace(/browser_extension_settings_container/gm, settingsContainerId)
     .replace(/browser_extension_settings_main/gm, settingsElementId)
 const storageKey = "settings"
@@ -107,23 +107,16 @@ const closeModal = () => {
   removeEventListener(document, "keydown", onDocumentKeyDown)
 }
 
-const onDocumentClick = (event) => {
-  let target = event.target as HTMLElement
-  const settingsContainer = getSettingsContainer()
-  if (settingsContainer) {
-    while (target !== settingsContainer && target) {
-      target = target.parentNode as HTMLElement
-    }
-
-    if (target === settingsContainer) {
-      return
-    }
+const onDocumentClick = (event: Event) => {
+  const target = event.target as HTMLElement
+  if (target?.closest(`.${prefix}container`)) {
+    return
   }
 
   closeModal()
 }
 
-const onDocumentKeyDown = (event) => {
+const onDocumentKeyDown = (event: KeyboardEvent) => {
   if (event.defaultPrevented) {
     return // 如果事件已经在进行中，则不做任何事。
   }
@@ -192,13 +185,15 @@ function getSettingsContainer() {
     id: settingsContainerId,
     class: `${prefix}container`,
     "data-bes-version": besVersion,
+    style: "display: none;",
   })
 }
 
 function getSettingsWrapper() {
+  const container = getSettingsContainer()
   return (
-    $(`.${prefix}container .${prefix}wrapper`) ||
-    addElement(getSettingsContainer(), "div", {
+    $(`.${prefix}wrapper`, container) ||
+    addElement(container, "div", {
       class: `${prefix}wrapper`,
     })
   )
@@ -255,8 +250,10 @@ function createSettingsElement() {
         const item = settingsTable[key]
         if (!item.type || item.type === "switch") {
           const switchOption = createSwitchOption(item.title, {
-            async onchange(event) {
-              await saveSattingsValue(key, event.target.checked)
+            async onchange(event: Event) {
+              if (event.target) {
+                await saveSattingsValue(key, event.target.checked)
+              }
             },
           })
 
@@ -270,21 +267,24 @@ function createSettingsElement() {
     const options2 = addElement(settingsMain, "div", {
       class: "option_groups",
     })
-    let timeoutId
+    let timeoutId: number | undefined
     addElement(options2, "textarea", {
       placeholder: `/* Custom rules for internal URLs, matching URLs will be opened in new tabs */`,
-      onkeyup(event) {
+      onkeyup(event: Event) {
+        const textArea = event.target as HTMLTextAreaElement
         if (timeoutId) {
           clearTimeout(timeoutId)
-          timeoutId = null
+          timeoutId = undefined
         }
 
         timeoutId = setTimeout(async () => {
           const host = location.host
-          await saveSattingsValue(
-            `customRulesForCurrentSite_${host}`,
-            event.target.value.trim()
-          )
+          if (textArea) {
+            await saveSattingsValue(
+              `customRulesForCurrentSite_${host}`,
+              textArea.value.trim()
+            )
+          }
         }, 100)
       },
     })
