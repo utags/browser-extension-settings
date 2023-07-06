@@ -6,13 +6,13 @@ import {
 import {
   $,
   $$,
-  addClass,
   addElement,
   addEventListener,
   addStyle,
-  createElement,
   doc,
+  parseInt10,
   removeEventListener,
+  runWhenBodyExists,
 } from "browser-extension-utils"
 import styleText from "data-text:./style.scss"
 import { createSwitchOption } from "./switch"
@@ -164,7 +164,7 @@ async function updateOptions() {
 function getSettingsContainer() {
   const container = $(`.${prefix}container`)
   if (container) {
-    const theVersion = Number.parseInt(container.dataset.besVersion || "0", 10)
+    const theVersion = parseInt10(container.dataset.besVersion, 0)
     if (theVersion < besVersion) {
       container.id = settingsContainerId
       container.dataset.besVersion = String(besVersion)
@@ -192,11 +192,6 @@ function getSettingsWrapper() {
 }
 
 function initExtensionList() {
-  if (!doc.body) {
-    setTimeout(initExtensionList, 100)
-    return
-  }
-
   const wrapper = getSettingsWrapper()
   if (!$(".extension_list_container", wrapper)) {
     const list = createExtensionList([])
@@ -321,11 +316,6 @@ function createSettingsElement() {
 }
 
 function addSideMenu() {
-  if (!doc.body) {
-    setTimeout(addSideMenu, 100)
-    return
-  }
-
   const menu =
     $("#browser_extension_side_menu") ||
     addElement(doc.body, "div", {
@@ -336,7 +326,7 @@ function addSideMenu() {
   const button = $("button[data-bes-version]", menu)
 
   if (button) {
-    const theVersion = Number.parseInt(button.dataset.besVersion || "0", 10)
+    const theVersion = parseInt10(button.dataset.besVersion, 0)
     if (theVersion >= besVersion) {
       return
     }
@@ -380,6 +370,8 @@ export const initSettings = async (options: SettingsOptions) => {
 
   settings = await getSettings()
   addStyle(getSettingsStyle())
-  initExtensionList()
-  addSideMenu()
+  runWhenBodyExists(() => {
+    initExtensionList()
+    addSideMenu()
+  })
 }
