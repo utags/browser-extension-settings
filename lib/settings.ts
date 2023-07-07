@@ -41,12 +41,16 @@ type SettingsTable = Record<string, SettingsSwitchItem | SettingsInputItem>
 type SettingsSwitchItem = {
   title: string
   defaultValue: boolean
+  type?: "switch"
+  group?: number
 }
 
 type SettingsInputItem = {
   title: string
   defaultValue: string
+  placeholder?: string
   type: string
+  group?: number
 }
 
 type RelatedExtension = {
@@ -93,8 +97,8 @@ async function saveSattingsValue(key: string, value: any) {
 
 export function getSettingsValue(key: string): boolean | string | undefined {
   return Object.hasOwn(settings, key)
-    ? settings[key]
-    : settingsTable[key]?.defaultValue
+    ? (settings[key] as boolean | string | undefined)
+    : (settingsTable[key]?.defaultValue as boolean | string | undefined)
 }
 
 const closeModal = () => {
@@ -136,11 +140,33 @@ async function updateOptions() {
 
   for (const key in settingsTable) {
     if (Object.hasOwn(settingsTable, key)) {
-      const checkbox = $(
-        `#${settingsElementId} .option_groups .switch_option[data-key="${key}"] input`
-      )
-      if (checkbox) {
-        checkbox.checked = getSettingsValue(key)
+      const item = settingsTable[key]
+      const type = item.type || "switch"
+
+      // console.log(key, type)
+      switch (type) {
+        case "switch": {
+          const checkbox = $(
+            `#${settingsElementId} .option_groups .switch_option[data-key="${key}"] input`
+          ) as HTMLInputElement
+          if (checkbox) {
+            checkbox.checked = getSettingsValue(key) as boolean
+          }
+
+          break
+        }
+
+        case "textarea": {
+          const textArea = $(
+            `#${settingsElementId} .option_groups textarea[data-key="${key}"]`
+          ) as HTMLTextAreaElement
+          textArea.value = getSettingsValue(key) as string
+          break
+        }
+
+        default: {
+          break
+        }
       }
     }
   }
@@ -153,11 +179,6 @@ async function updateOptions() {
     )
       ? "block"
       : "none"
-  }
-
-  const customStyleValue = $(`#${settingsElementId} .option_groups textarea`)
-  if (customStyleValue) {
-    customStyleValue.value = settings[`customRulesForCurrentSite_${host}`] || ""
   }
 }
 
@@ -231,11 +252,29 @@ function createSettingsElement() {
       addElement(settingsMain, "h2", { textContent: settingsOptions.title })
     }
 
-    const options = addElement(settingsMain, "div", { class: "option_groups" })
+    const optionGroups: HTMLElement[] = []
+    const getOptionGroup = (index: number) => {
+      if (index > optionGroups.length) {
+        for (let i = optionGroups.length; i < index; i++) {
+          optionGroups.push(
+            addElement(settingsMain!, "div", {
+              class: "option_groups",
+            })
+          )
+        }
+      }
+
+      return optionGroups[index - 1]
+    }
+
     for (const key in settingsTable) {
       if (Object.hasOwn(settingsTable, key)) {
         const item = settingsTable[key]
-        if (!item.type || item.type === "switch") {
+        const type = item.type || "switch"
+        const group = item.group || 1
+        const optionGroup = getOptionGroup(group)
+        // console.log(key, item, type, group)
+        if (type === "switch") {
           const switchOption = createSwitchOption(item.title, {
             async onchange(event: Event) {
               if (event.target) {
@@ -246,35 +285,31 @@ function createSettingsElement() {
 
           switchOption.dataset.key = key
 
-          addElement(options, switchOption)
+          addElement(optionGroup, switchOption)
+        } else if (type === "textarea") {
+          let timeoutId: number | undefined
+          addElement(optionGroup, "textarea", {
+            "data-key": key,
+            placeholder: (item as SettingsInputItem).placeholder || "",
+            onkeyup(event: Event) {
+              const textArea = event.target as HTMLTextAreaElement
+              if (timeoutId) {
+                clearTimeout(timeoutId)
+                timeoutId = undefined
+              }
+
+              timeoutId = setTimeout(async () => {
+                if (textArea) {
+                  await saveSattingsValue(key, textArea.value.trim())
+                }
+              }, 100)
+            },
+          })
         }
       }
     }
 
-    const options2 = addElement(settingsMain, "div", {
-      class: "option_groups",
-    })
-    let timeoutId: number | undefined
-    addElement(options2, "textarea", {
-      placeholder: `/* Custom rules for internal URLs, matching URLs will be opened in new tabs */`,
-      onkeyup(event: Event) {
-        const textArea = event.target as HTMLTextAreaElement
-        if (timeoutId) {
-          clearTimeout(timeoutId)
-          timeoutId = undefined
-        }
-
-        timeoutId = setTimeout(async () => {
-          const host = location.host
-          if (textArea) {
-            await saveSattingsValue(
-              `customRulesForCurrentSite_${host}`,
-              textArea.value.trim()
-            )
-          }
-        }, 100)
-      },
-    })
+    const options2 = getOptionGroup(2)
 
     const tip = addElement(options2, "div", {
       class: "tip",
@@ -362,6 +397,7 @@ export const initSettings = async (options: SettingsOptions) => {
   settingsTable = options.settingsTable || {}
   addValueChangeListener(storageKey, async () => {
     settings = await getSettings()
+    // console.log(JSON.stringify(settings, null, 2))
     await updateOptions()
     if (typeof options.onValueChange === "function") {
       options.onValueChange()
