@@ -6,7 +6,9 @@
   "main": "./lib/index.ts",
   "scripts": {
     "p": "prettier --write .",
-    "lint": "prettier --write . && xo --fix",
+    "lint": "run-s lint:*",
+    "lint:code": "prettier --write . && xo --fix",
+    "lint:type": "tsc --noemit",
     "test": "echo \"Error: no test specified\" && exit 0"
   },
   "repository": {
@@ -30,7 +32,9 @@
   },
   "devDependencies": {
     "@types/chrome": "^0.0.237",
+    "npm-run-all": "^4.1.5",
     "prettier": "^2.8.8",
+    "typescript": "^5.1.6",
     "xo": "^0.54.2"
   },
   "files": [
