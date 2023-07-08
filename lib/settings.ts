@@ -319,8 +319,9 @@ function createSettingsElement() {
           case "switch": {
             const switchOption = createSwitchOption(item.title, {
               async onchange(event: Event) {
-                if (event.target) {
-                  await saveSattingsValue(key, event.target.checked)
+                const checkbox = event.target as HTMLInputElement
+                if (checkbox) {
+                  await saveSattingsValue(key, checkbox.checked)
                 }
               },
             })

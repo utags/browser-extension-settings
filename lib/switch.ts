@@ -4,7 +4,12 @@ import {
   createElement,
 } from "browser-extension-utils"
 
-export function createSwitch(options = {}): HTMLElement {
+type SwichOptions = {
+  checked?: boolean
+  onchange?: (event: Event) => void | Promise<void>
+}
+
+export function createSwitch(options = {} as SwichOptions): HTMLElement {
   const container = createElement("label", { class: "container" })
   const checkbox = createElement(
     "input",
@@ -21,7 +26,10 @@ export function createSwitch(options = {}): HTMLElement {
   return container
 }
 
-export function createSwitchOption(text: string, options): HTMLElement {
+export function createSwitchOption(
+  text: string,
+  options: SwichOptions
+): HTMLElement {
   const div = createElement("div", { class: "switch_option" })
   addElement(div, "span", { textContent: text })
   div.append(createSwitch(options))
