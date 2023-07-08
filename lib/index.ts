@@ -1,1 +1,7 @@
-export { initSettings, showSettings, getSettingsValue } from "./settings"
+export {
+  initSettings,
+  showSettings,
+  getSettingsValue,
+  saveSattingsValues,
+  resetSattingsValues,
+} from "./settings"

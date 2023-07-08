@@ -36,7 +36,10 @@ type SettingsOptions = {
   relatedExtensions?: RelatedExtension[]
 }
 
-type SettingsTable = Record<string, SettingsSwitchItem | SettingsInputItem>
+type SettingsTable = Record<
+  string,
+  SettingsSwitchItem | SettingsInputItem | SettingsActionItem
+>
 
 type SettingsSwitchItem = {
   title: string
@@ -51,6 +54,14 @@ type SettingsInputItem = {
   placeholder?: string
   type: string
   group?: number
+}
+
+type SettingsActionItem = {
+  title: string
+  type: string
+  onclick?: () => void
+  group?: number
+  defaultValue?: any
 }
 
 type RelatedExtension = {
@@ -91,6 +102,29 @@ async function saveSattingsValue(key: string, value: any) {
     settingsTable[key] && settingsTable[key].defaultValue === value
       ? undefined
       : value
+
+  await setValue(storageKey, settings)
+}
+
+export async function resetSattingsValues() {
+  await setValue(storageKey, {})
+}
+
+export async function saveSattingsValues(
+  values: Record<string, boolean | string | undefined>
+) {
+  const settings = await getSettings()
+
+  for (const key in values) {
+    if (Object.hasOwn(values, key)) {
+      const value = values[key]
+
+      settings[key] =
+        settingsTable[key] && settingsTable[key].defaultValue === value
+          ? undefined
+          : value
+    }
+  }
 
   await setValue(storageKey, settings)
 }
@@ -274,37 +308,56 @@ function createSettingsElement() {
         const group = item.group || 1
         const optionGroup = getOptionGroup(group)
         // console.log(key, item, type, group)
-        if (type === "switch") {
-          const switchOption = createSwitchOption(item.title, {
-            async onchange(event: Event) {
-              if (event.target) {
-                await saveSattingsValue(key, event.target.checked)
-              }
-            },
-          })
-
-          switchOption.dataset.key = key
-
-          addElement(optionGroup, switchOption)
-        } else if (type === "textarea") {
-          let timeoutId: number | undefined
-          addElement(optionGroup, "textarea", {
-            "data-key": key,
-            placeholder: (item as SettingsInputItem).placeholder || "",
-            onkeyup(event: Event) {
-              const textArea = event.target as HTMLTextAreaElement
-              if (timeoutId) {
-                clearTimeout(timeoutId)
-                timeoutId = undefined
-              }
-
-              timeoutId = setTimeout(async () => {
-                if (textArea) {
-                  await saveSattingsValue(key, textArea.value.trim())
+        switch (type) {
+          case "switch": {
+            const switchOption = createSwitchOption(item.title, {
+              async onchange(event: Event) {
+                if (event.target) {
+                  await saveSattingsValue(key, event.target.checked)
                 }
-              }, 100)
-            },
-          })
+              },
+            })
+
+            switchOption.dataset.key = key
+
+            addElement(optionGroup, switchOption)
+
+            break
+          }
+
+          case "textarea": {
+            let timeoutId: number | undefined
+            addElement(optionGroup, "textarea", {
+              "data-key": key,
+              placeholder: (item as SettingsInputItem).placeholder || "",
+              onkeyup(event: Event) {
+                const textArea = event.target as HTMLTextAreaElement
+                if (timeoutId) {
+                  clearTimeout(timeoutId)
+                  timeoutId = undefined
+                }
+
+                timeoutId = setTimeout(async () => {
+                  if (textArea) {
+                    await saveSattingsValue(key, textArea.value.trim())
+                  }
+                }, 100)
+              },
+            })
+
+            break
+          }
+
+          case "action": {
+            addElement(optionGroup, "a", {
+              class: "action",
+              textContent: item.title,
+              onclick: (item as SettingsActionItem).onclick,
+            })
+
+            break
+          }
+          // No default
         }
       }
     }
