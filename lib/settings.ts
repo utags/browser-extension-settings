@@ -39,7 +39,7 @@ type SettingsOptions = {
 
 type SettingsTable = Record<
   string,
-  SettingsSwitchItem | SettingsInputItem | SettingsActionItem
+  SettingsSwitchItem | SettingsInputItem | SettingsActionItem | SettingsTipItem
 >
 
 type SettingsSwitchItem = {
@@ -61,6 +61,14 @@ type SettingsActionItem = {
   title: string
   type: string
   onclick?: () => void
+  group?: number
+  defaultValue?: any
+}
+
+type SettingsTipItem = {
+  title: string
+  type: string
+  tipContent: string
   group?: number
   defaultValue?: any
 }
@@ -356,36 +364,26 @@ function createSettingsElement() {
 
             break
           }
+
+          case "tip": {
+            const tip = addElement(optionGroup, "div", {
+              class: "bes_tip",
+            })
+            addElement(tip, "a", {
+              class: "bes_tip_anchor",
+              textContent: item.title,
+            })
+            const tipContent = addElement(tip, "div", {
+              class: "bes_tip_content",
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              innerHTML: (item as SettingsTipItem).tipContent,
+            })
+            break
+          }
           // No default
         }
       }
     }
-
-    const options2 = getOptionGroup(2)
-
-    const tip = addElement(options2, "div", {
-      class: "tip",
-    })
-    addElement(tip, "a", {
-      class: "tip_anchor",
-      textContent: "Examples",
-    })
-    const tipContent = addElement(tip, "div", {
-      class: "tip_content",
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      innerHTML: `<p>Custom rules for internal URLs, matching URLs will be opened in new tabs</p>
-      <p>
-      - One line per url pattern<br>
-      - All URLs contains '/posts' or '/users/'<br>
-      <pre>/posts/
-/users/</pre>
-
-      - Regex is supported<br>
-      <pre>^/(posts|members)/d+</pre>
-
-      - '*' for all URLs
-      </p>`,
-    })
 
     if (settingsOptions.footer) {
       const footer = addElement(settingsMain, "footer")

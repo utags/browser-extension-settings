@@ -213,7 +213,7 @@
     margin-right: 10px;
   }
 
-  .option_groups .tip {
+  .option_groups .bes_tip {
     position: relative;
     margin: 0;
     padding: 0 15px 0 0;
@@ -221,11 +221,11 @@
     max-width: none;
     font-size: 14px;
 
-    .tip_anchor {
+    .bes_tip_anchor {
       cursor: help;
       text-decoration: underline;
     }
-    .tip_content {
+    .bes_tip_content {
       position: absolute;
       bottom: 15px;
       left: 0;
@@ -240,8 +240,8 @@
       box-shadow: 0px 10px 39px 10px rgba(62, 66, 66, 0.22) !important;
     }
 
-    .tip_anchor:hover + .tip_content,
-    .tip_content:hover {
+    .bes_tip_anchor:hover + .bes_tip_content,
+    .bes_tip_content:hover {
       display: block;
     }
 
