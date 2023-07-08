@@ -33,6 +33,7 @@ type SettingsOptions = {
   footer?: string
   settingsTable?: SettingsTable
   onValueChange?: () => void
+  onViewUpdate?: (settingsMainView: HTMLElement) => void
   relatedExtensions?: RelatedExtension[]
 }
 
@@ -194,7 +195,10 @@ async function updateOptions() {
           const textArea = $(
             `#${settingsElementId} .option_groups textarea[data-key="${key}"]`
           ) as HTMLTextAreaElement
-          textArea.value = getSettingsValue(key) as string
+          if (textArea) {
+            textArea.value = getSettingsValue(key) as string
+          }
+
           break
         }
 
@@ -205,14 +209,9 @@ async function updateOptions() {
     }
   }
 
-  const host = location.host
-  const group2 = $(`#${settingsElementId} .option_groups:nth-of-type(2)`)
-  if (group2) {
-    group2.style.display = getSettingsValue(
-      `enableCustomRulesForCurrentSite_${host}`
-    )
-      ? "block"
-      : "none"
+  if (typeof settingsOptions.onViewUpdate === "function") {
+    const settingsMain = createSettingsElement()
+    settingsOptions.onViewUpdate(settingsMain)
   }
 }
 
