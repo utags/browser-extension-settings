@@ -455,6 +455,12 @@ function addCommonSettings(settingsTable: SettingsTable) {
   }
 }
 
+function handleShowSettingsUrl() {
+  if (location.hash === "#bes-show-settings") {
+    setTimeout(showSettings, 100)
+  }
+}
+
 export async function showSettings() {
   const settingsContainer = getSettingsContainer()
 
@@ -488,4 +494,6 @@ export const initSettings = async (options: SettingsOptions) => {
     initExtensionList()
     addSideMenu()
   })
+
+  handleShowSettingsUrl()
 }
