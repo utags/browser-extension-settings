@@ -402,6 +402,10 @@ function createSettingsElement() {
 }
 
 function addSideMenu() {
+  if (!getSettingsValue("displaySettingsButtonInSideMenu")) {
+    return
+  }
+
   const menu =
     $("#browser_extension_side_menu") ||
     addElement(doc.body, "div", {
@@ -430,6 +434,27 @@ function addSideMenu() {
   })
 }
 
+function addCommonSettings(settingsTable: SettingsTable) {
+  let maxGroup = 0
+  for (const key in settingsTable) {
+    if (Object.hasOwn(settingsTable, key)) {
+      const item = settingsTable[key]
+      const group = item.group || 1
+      if (group > maxGroup) {
+        maxGroup = group
+      }
+    }
+  }
+
+  settingsTable.displaySettingsButtonInSideMenu = {
+    title: "Display Settings Button in Side Menu",
+    defaultValue: !(
+      typeof GM === "object" && typeof GM.registerMenuCommand === "function"
+    ),
+    group: maxGroup + 1,
+  }
+}
+
 export async function showSettings() {
   const settingsContainer = getSettingsContainer()
 
@@ -446,10 +471,12 @@ export async function showSettings() {
 export const initSettings = async (options: SettingsOptions) => {
   settingsOptions = options
   settingsTable = options.settingsTable || {}
+  addCommonSettings(settingsTable)
   addValueChangeListener(storageKey, async () => {
     settings = await getSettings()
     // console.log(JSON.stringify(settings, null, 2))
     await updateOptions()
+    addSideMenu()
     if (typeof options.onValueChange === "function") {
       options.onValueChange()
     }
