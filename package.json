@@ -1,6 +1,6 @@
 {
   "name": "browser-extension-settings",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Settings module for developing browser extensions and userscripts",
   "type": "module",
   "main": "./lib/index.ts",
