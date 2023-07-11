@@ -23,7 +23,7 @@ import {
   activeExtensionList,
   deactiveExtensionList,
 } from "./extension-list"
-import { besVersion } from "./common"
+import { besVersion, openInNewTabButton } from "./common"
 
 const prefix = "browser_extension_settings_"
 
@@ -61,6 +61,7 @@ type SettingsActionItem = {
   title: string
   type: string
   onclick?: () => void
+  url?: string
   group?: number
   defaultValue?: any
 }
@@ -363,6 +364,19 @@ function createSettingsElement() {
               onclick: (item as SettingsActionItem).onclick,
             })
 
+            break
+          }
+
+          case "externalLink": {
+            const div4 = addElement(optionGroup, "div", {
+              class: "bes_external_link",
+            })
+
+            addElement(div4, "a", {
+              textContent: item.title,
+              href: (item as SettingsActionItem).url,
+              target: "_blank",
+            })
             break
           }
 
