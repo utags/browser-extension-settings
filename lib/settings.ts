@@ -336,7 +336,10 @@ function createSettingsElement() {
 
           case "textarea": {
             let timeoutId: number | undefined
-            addElement(optionGroup, "textarea", {
+            const div = addElement(optionGroup, "div", {
+              class: "bes_textarea",
+            })
+            addElement(div, "textarea", {
               "data-key": key,
               placeholder: (item as SettingsInputItem).placeholder || "",
               onkeyup(event: Event) {
