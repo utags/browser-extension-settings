@@ -155,6 +155,10 @@ const closeModal = () => {
   removeEventListener(document, "keydown", onDocumentKeyDown, true)
 }
 
+export function hideSettings() {
+  closeModal()
+}
+
 const onDocumentClick = (event: Event) => {
   const target = event.target as HTMLElement
   if (target?.closest(`.${prefix}container`)) {
