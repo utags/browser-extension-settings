@@ -93,8 +93,8 @@ const settingsElementId = prefix + "main_" + randomId
 const getSettingsElement = () => $("#" + settingsElementId)
 const getSettingsStyle: () => string = () =>
   (styleText as string)
-    .replace(/browser_extension_settings_container/gm, settingsContainerId)
-    .replace(/browser_extension_settings_main/gm, settingsElementId)
+    .replaceAll(/browser_extension_settings_container/gm, settingsContainerId)
+    .replaceAll(/browser_extension_settings_main/gm, settingsElementId)
 const storageKey = "settings"
 
 let settingsOptions: SettingsOptions
