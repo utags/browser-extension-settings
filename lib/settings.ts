@@ -9,6 +9,7 @@ import {
   addElement,
   addEventListener,
   addStyle,
+  createHTML,
   doc,
   parseInt10,
   removeEventListener,
@@ -398,7 +399,7 @@ function createSettingsElement() {
             const tipContent = addElement(tip, "div", {
               class: "bes_tip_content",
               // eslint-disable-next-line @typescript-eslint/naming-convention
-              innerHTML: (item as SettingsTipItem).tipContent,
+              innerHTML: createHTML((item as SettingsTipItem).tipContent),
             })
             break
           }
@@ -409,13 +410,14 @@ function createSettingsElement() {
 
     if (settingsOptions.footer) {
       const footer = addElement(settingsMain, "footer")
-      footer.innerHTML =
+      footer.innerHTML = createHTML(
         typeof settingsOptions.footer === "string"
           ? settingsOptions.footer
           : `<p>Made with ❤️ by
       <a href="https://www.pipecraft.net/" target="_blank">
         Pipecraft
       </a></p>`
+      )
     }
   }
 

@@ -4,6 +4,7 @@ import {
   addClass,
   addElement,
   createElement,
+  createHTML,
   removeClass,
 } from "browser-extension-utils"
 import { openButton, openInNewTabButton } from "./common"
@@ -131,7 +132,7 @@ const createInstalledExtension = (installedExtension: InstalledExtension) => {
 }
 
 const updateRelatedExtensions = (container: HTMLElement) => {
-  container.innerHTML = ""
+  container.innerHTML = createHTML("")
 
   for (const relatedExtension of relatedExtensions) {
     // console.log(relatedExtension)
