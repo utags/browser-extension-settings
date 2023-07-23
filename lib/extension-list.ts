@@ -4,6 +4,7 @@ import {
   addClass,
   addElement,
   createElement,
+  createHTML,
   removeClass,
 } from "browser-extension-utils"
 import { openButton, openInNewTabButton } from "./common"
@@ -125,13 +126,13 @@ const createInstalledExtension = (installedExtension: InstalledExtension) => {
     textContent: installedExtension.title,
   })
   const svg = addElement(a, "svg")
-  svg.outerHTML = openButton
+  svg.outerHTML = createHTML(openButton)
 
   return div
 }
 
 const updateRelatedExtensions = (container: HTMLElement) => {
-  container.innerHTML = ""
+  container.innerHTML = createHTML("")
 
   for (const relatedExtension of relatedExtensions) {
     // console.log(relatedExtension)
@@ -153,7 +154,7 @@ const updateRelatedExtensions = (container: HTMLElement) => {
       textContent: relatedExtension.title,
     })
     const svg = addElement(a, "svg")
-    svg.outerHTML = openInNewTabButton
+    svg.outerHTML = createHTML(openInNewTabButton)
   }
 }
 
