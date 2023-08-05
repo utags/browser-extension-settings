@@ -5,13 +5,13 @@ dependencies:
     specifier: ^0.1.2
     version: 0.1.2
   browser-extension-utils:
-    specifier: ^0.1.13
-    version: 0.1.13
+    specifier: ^0.1.15
+    version: 0.1.15
 
 devDependencies:
   '@types/chrome':
-    specifier: ^0.0.241
-    version: 0.0.241
+    specifier: ^0.0.243
+    version: 0.0.243
   npm-run-all:
     specifier: ^4.1.5
     version: 4.1.5
@@ -200,8 +200,8 @@ packages:
       pify: 6.1.0
     dev: false
 
-  /@types/chrome@0.0.241:
-    resolution: {integrity: sha512-3WxC2D8zhyDnCU1GxyznoyUulLH6ReLWUWQm5LSM7S1rvV9w+k8TUNbWrFavk6zz2E1ws05lNawnSa7rK5kY8Q==}
+  /@types/chrome@0.0.243:
+    resolution: {integrity: sha512-4PHv0kxxxpZFHWPBiJJ9TWH8kbx0567j1b2djnhpJjpiSGNI7UKkz7dSEECBtQ0B3N5nQTMwSB/5IopkWGAbEA==}
     dependencies:
       '@types/filesystem': 0.0.32
       '@types/har-format': 1.2.11
@@ -683,8 +683,8 @@ packages:
       - react
     dev: false
 
-  /browser-extension-utils@0.1.13:
-    resolution: {integrity: sha512-fvwrXlZLWT7khfhkkXk+ogFo531Erk+2xkfplHjm7ak3TzmXeVw1r9ond/28eTvUTPH+582rX0pG2p7Zbn9idA==}
+  /browser-extension-utils@0.1.15:
+    resolution: {integrity: sha512-j3dIXlM3fgRVlLfAwg/9R+aA1JJQNVjYT0p7J88C/ea6BlS8LQJdA3l0lZskXbnuP4CtlWxxMnRU7zvVxgEazw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dev: false
 
