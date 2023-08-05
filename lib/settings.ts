@@ -24,7 +24,7 @@ import {
   activeExtensionList,
   deactiveExtensionList,
 } from "./extension-list"
-import { besVersion, openInNewTabButton } from "./common"
+import { besVersion, settingButton } from "./common"
 
 const prefix = "browser_extension_settings_"
 
@@ -454,6 +454,8 @@ function addSideMenu() {
     onclick() {
       setTimeout(showSettings, 1)
     },
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    innerHTML: settingButton,
   })
 }
 
