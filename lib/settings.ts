@@ -14,6 +14,7 @@ import {
   parseInt10,
   removeEventListener,
   runWhenBodyExists,
+  runWhenHeadExists,
 } from "browser-extension-utils"
 import styleText from "data-text:./style.scss"
 import { createSwitchOption } from "./switch"
@@ -514,7 +515,9 @@ export const initSettings = async (options: SettingsOptions) => {
   })
 
   settings = await getSettings()
-  addStyle(getSettingsStyle())
+  runWhenHeadExists(() => {
+    addStyle(getSettingsStyle())
+  })
   runWhenBodyExists(() => {
     initExtensionList()
     addSideMenu()
