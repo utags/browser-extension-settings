@@ -112,7 +112,7 @@ async function getSettings() {
   )
 }
 
-async function saveSattingsValue(key: string, value: any) {
+async function saveSettingsValue(key: string, value: any) {
   const settings = await getSettings()
   settings[key] =
     settingsTable[key] && settingsTable[key].defaultValue === value
@@ -122,11 +122,11 @@ async function saveSattingsValue(key: string, value: any) {
   await setValue(storageKey, settings)
 }
 
-export async function resetSattingsValues() {
+export async function resetSettingsValues() {
   await setValue(storageKey, {})
 }
 
-export async function saveSattingsValues(
+export async function saveSettingsValues(
   values: Record<string, boolean | string | undefined>
 ) {
   const settings = await getSettings()
@@ -332,7 +332,7 @@ function createSettingsElement() {
               async onchange(event: Event) {
                 const checkbox = event.target as HTMLInputElement
                 if (checkbox) {
-                  await saveSattingsValue(key, checkbox.checked)
+                  await saveSettingsValue(key, checkbox.checked)
                 }
               },
             })
@@ -361,7 +361,7 @@ function createSettingsElement() {
 
                 timeoutId = setTimeout(async () => {
                   if (textArea) {
-                    await saveSattingsValue(key, textArea.value.trim())
+                    await saveSettingsValue(key, textArea.value.trim())
                   }
                 }, 100)
               },

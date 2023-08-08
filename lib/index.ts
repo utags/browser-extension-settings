@@ -3,6 +3,6 @@ export {
   showSettings,
   hideSettings,
   getSettingsValue,
-  saveSattingsValues,
-  resetSattingsValues,
+  saveSettingsValues,
+  resetSettingsValues,
 } from "./settings"
