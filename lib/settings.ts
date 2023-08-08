@@ -46,6 +46,7 @@ type SettingsTable = Record<
 
 type SettingsSwitchItem = {
   title: string
+  icon?: string
   defaultValue: boolean
   type?: "switch"
   group?: number
@@ -53,6 +54,7 @@ type SettingsSwitchItem = {
 
 type SettingsInputItem = {
   title: string
+  icon?: string
   defaultValue: string
   placeholder?: string
   type: string
@@ -61,6 +63,7 @@ type SettingsInputItem = {
 
 type SettingsActionItem = {
   title: string
+  icon?: string
   type: string
   onclick?: () => void
   url?: string
@@ -70,6 +73,7 @@ type SettingsActionItem = {
 
 type SettingsTipItem = {
   title: string
+  icon?: string
   type: string
   tipContent: string
   group?: number
@@ -324,7 +328,7 @@ function createSettingsElement() {
         // console.log(key, item, type, group)
         switch (type) {
           case "switch": {
-            const switchOption = createSwitchOption(item.title, {
+            const switchOption = createSwitchOption(item.icon, item.title, {
               async onchange(event: Event) {
                 const checkbox = event.target as HTMLInputElement
                 if (checkbox) {

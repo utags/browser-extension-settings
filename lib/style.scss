@@ -224,8 +224,14 @@
     border-top: none;
   }
 
+  .switch_option > img {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+  }
   .switch_option > span {
     margin-right: 10px;
+    flex-grow: 1;
   }
 
   .option_groups .bes_tip {

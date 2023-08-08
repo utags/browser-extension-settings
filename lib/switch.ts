@@ -29,8 +29,26 @@ export function createSwitch(options = {} as SwichOptions): HTMLElement {
 export function createSwitchOption(
   text: string,
   options: SwichOptions
+): HTMLElement
+export function createSwitchOption(
+  icon: string | undefined,
+  text: string,
+  options: SwichOptions
+): HTMLElement
+export function createSwitchOption(
+  icon: string,
+  text: string | SwichOptions,
+  options?: SwichOptions
 ): HTMLElement {
+  if (typeof text !== "string") {
+    return createSwitchOption(undefined, icon, text)
+  }
+
   const div = createElement("div", { class: "switch_option" })
+  if (icon) {
+    addElement(div, "img", { src: icon })
+  }
+
   addElement(div, "span", { textContent: text })
   div.append(createSwitch(options))
   return div
