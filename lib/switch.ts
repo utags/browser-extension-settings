@@ -44,12 +44,12 @@ export function createSwitchOption(
     return createSwitchOption(undefined, icon, text)
   }
 
-  const div = createElement("div", { class: "switch_option" })
+  const div = createElement("div", { class: "switch_option bes_option" })
   if (icon) {
-    addElement(div, "img", { src: icon })
+    addElement(div, "img", { src: icon, class: "bes_icon" })
   }
 
-  addElement(div, "span", { textContent: text })
+  addElement(div, "span", { textContent: text, class: "bes_title" })
   div.append(createSwitch(options))
   return div
 }

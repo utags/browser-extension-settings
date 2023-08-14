@@ -41,7 +41,11 @@ type SettingsOptions = {
 
 type SettingsTable = Record<
   string,
-  SettingsSwitchItem | SettingsInputItem | SettingsActionItem | SettingsTipItem
+  | SettingsSwitchItem
+  | SettingsInputItem
+  | SettingsActionItem
+  | SettingsSelectItem
+  | SettingsTipItem
 >
 
 type SettingsSwitchItem = {
@@ -67,6 +71,15 @@ type SettingsActionItem = {
   type: string
   onclick?: () => void
   url?: string
+  group?: number
+  defaultValue?: any
+}
+
+type SettingsSelectItem = {
+  title: string
+  icon?: string
+  type: "select"
+  options: { string: { string: any } }
   group?: number
   defaultValue?: any
 }
@@ -205,6 +218,18 @@ async function updateOptions() {
           ) as HTMLInputElement
           if (checkbox) {
             checkbox.checked = getSettingsValue(key) as boolean
+          }
+
+          break
+        }
+
+        case "select": {
+          const options = $$(
+            `#${settingsElementId} .option_groups .select_option[data-key="${key}"] .bes_select option`
+          ) as HTMLOptionElement[]
+
+          for (const option of options) {
+            option.selected = option.value === String(getSettingsValue(key))
           }
 
           break
@@ -390,6 +415,39 @@ function createSettingsElement() {
               href: (item as SettingsActionItem).url,
               target: "_blank",
             })
+            break
+          }
+
+          case "select": {
+            const div = addElement(optionGroup, "div", {
+              class: "select_option bes_option",
+              "data-key": key,
+            })
+            if (item.icon) {
+              addElement(div, "img", { src: item.icon, class: "bes_icon" })
+            }
+
+            addElement(div, "span", {
+              textContent: item.title,
+              class: "bes_title",
+            })
+
+            const select = addElement(div, "select", {
+              class: "bes_select",
+              onchange: async () => {
+                console.log(select.value)
+                await saveSettingsValue(key, select.value)
+              },
+            }) as HTMLSelectElement
+
+            for (const option of Object.entries(
+              (item as SettingsSelectItem).options
+            )) {
+              addElement(select, "option", {
+                textContent: option[0],
+                value: option[1],
+              })
+            }
             break
           }
 

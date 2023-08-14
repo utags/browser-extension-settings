@@ -215,7 +215,8 @@
     box-sizing: border-box;
   }
 
-  .switch_option {
+  .switch_option,
+  .select_option {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -231,14 +232,29 @@
     border-top: none;
   }
 
-  .switch_option > img {
+  .bes_option > .bes_icon {
     width: 24px;
     height: 24px;
     margin-right: 10px;
   }
-  .switch_option > span {
+  .bes_option > .bes_title {
     margin-right: 10px;
     flex-grow: 1;
+  }
+
+  .bes_option > .bes_select {
+    box-sizing: border-box;
+    background-color: #fff;
+    height: 24px;
+    padding: 0 2px 0 2px;
+    margin: 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    /*
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    */
   }
 
   .option_groups .bes_tip {
