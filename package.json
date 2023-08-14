@@ -28,7 +28,7 @@
   "homepage": "https://github.com/utags/browser-extension-settings#readme",
   "dependencies": {
     "browser-extension-storage": "^0.1.2",
-    "browser-extension-utils": "^0.1.15"
+    "browser-extension-utils": "^0.1.17"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.243",

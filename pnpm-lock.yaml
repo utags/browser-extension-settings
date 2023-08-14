@@ -5,8 +5,8 @@ dependencies:
     specifier: ^0.1.2
     version: 0.1.2
   browser-extension-utils:
-    specifier: ^0.1.15
-    version: 0.1.15
+    specifier: ^0.1.17
+    version: 0.1.17
 
 devDependencies:
   '@types/chrome':
@@ -683,8 +683,8 @@ packages:
       - react
     dev: false
 
-  /browser-extension-utils@0.1.15:
-    resolution: {integrity: sha512-j3dIXlM3fgRVlLfAwg/9R+aA1JJQNVjYT0p7J88C/ea6BlS8LQJdA3l0lZskXbnuP4CtlWxxMnRU7zvVxgEazw==}
+  /browser-extension-utils@0.1.17:
+    resolution: {integrity: sha512-HJzNVd2Vhikmc4ZJNosVqzLKuMCiC4aJyjOetPX0LWV5Rk9h+I9WpNbZTn2b9j229gPLpGhAKMFIJmiln/fzdw==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
     dev: false
 

@@ -13,7 +13,7 @@ import {
   doc,
   parseInt10,
   removeEventListener,
-  runWhenBodyExists,
+  runWhenDomReady,
   runWhenHeadExists,
 } from "browser-extension-utils"
 import styleText from "data-text:./style.scss"
@@ -522,7 +522,7 @@ export const initSettings = async (options: SettingsOptions) => {
   runWhenHeadExists(() => {
     addStyle(getSettingsStyle())
   })
-  runWhenBodyExists(() => {
+  runWhenDomReady(() => {
     initExtensionList()
     addSideMenu()
   })
