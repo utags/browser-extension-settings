@@ -24,37 +24,47 @@ type RelatedExtension = {
   url: string
 }
 
+const lang = navigator.language
+let locale: string
+if (lang === "zh-TW" || lang === "zh-HK") {
+  locale = "zh-TW"
+} else if (lang.includes("zh")) {
+  locale = "zh-CN"
+} else {
+  locale = "en"
+}
+
 const relatedExtensions: RelatedExtension[] = [
   {
     id: "utags",
     title: i("settings.extensions.utags.title"),
-    url: "https://greasyfork.org/zh-CN/scripts/460718-utags-add-usertags-to-links",
+    url: `https://greasyfork.org/${locale}/scripts/460718-utags-add-usertags-to-links`,
   },
   {
     id: "links-helper",
     title: i("settings.extensions.links-helper.title"),
     description: "在新标签页中打开第三方网站链接，图片链接转图片标签等",
-    url: "https://greasyfork.org/zh-CN/scripts/464541-links-helper",
+    url: `https://greasyfork.org/${locale}/scripts/464541-links-helper`,
   },
   {
     id: "v2ex.rep",
     title: i("settings.extensions.v2ex.rep.title"),
-    url: "https://greasyfork.org/zh-CN/scripts/466589-v2ex-rep-%E4%B8%93%E6%B3%A8%E6%8F%90%E5%8D%87-v2ex-%E4%B8%BB%E9%A2%98%E5%9B%9E%E5%A4%8D%E6%B5%8F%E8%A7%88%E4%BD%93%E9%AA%8C",
+    url: `https://greasyfork.org/${locale}/scripts/466589-v2ex-rep-%E4%B8%93%E6%B3%A8%E6%8F%90%E5%8D%87-v2ex-%E4%B8%BB%E9%A2%98%E5%9B%9E%E5%A4%8D%E6%B5%8F%E8%A7%88%E4%BD%93%E9%AA%8C`,
   },
   {
     id: "v2ex.min",
     title: i("settings.extensions.v2ex.min.title"),
-    url: "https://greasyfork.org/zh-CN/scripts/463552-v2ex-min-v2ex-%E6%9E%81%E7%AE%80%E9%A3%8E%E6%A0%BC",
+    url: `https://greasyfork.org/${locale}/scripts/463552-v2ex-min-v2ex-%E6%9E%81%E7%AE%80%E9%A3%8E%E6%A0%BC`,
   },
   {
     id: "replace-ugly-avatars",
     title: i("settings.extensions.replace-ugly-avatars.title"),
-    url: "https://greasyfork.org/zh-CN/scripts/472616-replace-ugly-avatars",
+    url: `https://greasyfork.org/${locale}/scripts/472616-replace-ugly-avatars`,
   },
   {
     id: "more-by-pipecraft",
     title: i("settings.extensions.more-by-pipecraft.title"),
-    url: "https://greasyfork.org/zh-CN/users/1030884-pipecraft",
+    url: `https://greasyfork.org/${locale}/users/1030884-pipecraft`,
   },
 ]
 
