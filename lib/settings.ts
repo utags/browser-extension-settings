@@ -12,6 +12,7 @@ import {
   createHTML,
   doc,
   parseInt10,
+  registerMenuCommand,
   removeEventListener,
   runWhenDomReady,
   runWhenHeadExists,
@@ -585,6 +586,8 @@ export const initSettings = async (options: SettingsOptions) => {
     initExtensionList()
     addSideMenu()
   })
+
+  registerMenuCommand(i("settings.menu.settings"), showSettings, "o")
 
   handleShowSettingsUrl()
 }
