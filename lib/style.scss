@@ -296,8 +296,13 @@
     }
 
     pre {
-      font-family: Consolas, panic sans, bitstream vera sans mono, Menlo,
-        microsoft yahei, monospace;
+      font-family:
+        Consolas,
+        panic sans,
+        bitstream vera sans mono,
+        Menlo,
+        microsoft yahei,
+        monospace;
       font-size: 13px;
       letter-spacing: 0.015em;
       line-height: 120%;
@@ -360,7 +365,9 @@
     top: calc(50% - var(--toggle-diameter) / 2);
     border-radius: 50%;
     background: #ffffff;
-    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.15), 0px 3px 1px rgba(0, 0, 0, 0.06);
+    box-shadow:
+      0px 3px 8px rgba(0, 0, 0, 0.15),
+      0px 3px 1px rgba(0, 0, 0, 0.06);
     transition: all 0.2s ease-out;
     cursor: pointer;
   }
