@@ -8,6 +8,7 @@ import {
   removeClass,
 } from "browser-extension-utils"
 import { openButton, openInNewTabButton } from "./common"
+import { i } from "./messages"
 
 type InstalledExtension = {
   id: string
@@ -26,33 +27,33 @@ type RelatedExtension = {
 const relatedExtensions: RelatedExtension[] = [
   {
     id: "utags",
-    title: "🏷️ UTags - Add usertags to links",
+    title: i("settings.extensions.utags.title"),
     url: "https://greasyfork.org/zh-CN/scripts/460718-utags-add-usertags-to-links",
   },
   {
     id: "links-helper",
-    title: "🔗 链接助手",
+    title: i("settings.extensions.links-helper.title"),
     description: "在新标签页中打开第三方网站链接，图片链接转图片标签等",
     url: "https://greasyfork.org/zh-CN/scripts/464541-links-helper",
   },
   {
     id: "v2ex.rep",
-    title: "V2EX.REP - 专注提升 V2EX 主题回复浏览体验",
+    title: i("settings.extensions.v2ex.rep.title"),
     url: "https://greasyfork.org/zh-CN/scripts/466589-v2ex-rep-%E4%B8%93%E6%B3%A8%E6%8F%90%E5%8D%87-v2ex-%E4%B8%BB%E9%A2%98%E5%9B%9E%E5%A4%8D%E6%B5%8F%E8%A7%88%E4%BD%93%E9%AA%8C",
   },
   {
     id: "v2ex.min",
-    title: "v2ex.min - V2EX 极简风格",
+    title: i("settings.extensions.v2ex.min.title"),
     url: "https://greasyfork.org/zh-CN/scripts/463552-v2ex-min-v2ex-%E6%9E%81%E7%AE%80%E9%A3%8E%E6%A0%BC",
   },
   {
     id: "replace-ugly-avatars",
-    title: "赐你个头像吧",
+    title: i("settings.extensions.replace-ugly-avatars.title"),
     url: "https://greasyfork.org/zh-CN/scripts/472616-replace-ugly-avatars",
   },
   {
     id: "more-by-pipecraft",
-    title: "更多有趣的脚本",
+    title: i("settings.extensions.more-by-pipecraft.title"),
     url: "https://greasyfork.org/zh-CN/users/1030884-pipecraft",
   },
 ]

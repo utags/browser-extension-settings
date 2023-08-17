@@ -57,6 +57,14 @@
       "import/extensions": 0,
       "@typescript-eslint/prefer-nullish-coalescing": 0,
       "capitalized-comments": 0
-    }
+    },
+    "overrides": [
+      {
+        "files": "lib/messages/*.ts",
+        "rules": {
+          "@typescript-eslint/naming-convention": 0
+        }
+      }
+    ]
   }
 }

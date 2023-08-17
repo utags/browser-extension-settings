@@ -26,6 +26,7 @@ import {
   deactiveExtensionList,
 } from "./extension-list"
 import { besVersion, settingButton } from "./common"
+import { i } from "./messages"
 
 const prefix = "browser_extension_settings_"
 
@@ -434,8 +435,7 @@ function createSettingsElement() {
 
             const select = addElement(div, "select", {
               class: "bes_select",
-              onchange: async () => {
-                console.log(select.value)
+              async onchange() {
                 await saveSettingsValue(key, select.value)
               },
             }) as HTMLSelectElement
@@ -448,6 +448,7 @@ function createSettingsElement() {
                 value: option[1],
               })
             }
+
             break
           }
 
@@ -513,7 +514,7 @@ function addSideMenu() {
   addElement(menu, "button", {
     type: "button",
     "data-bes-version": besVersion,
-    title: "设置",
+    title: i("settings.menu.settings"),
     onclick() {
       setTimeout(showSettings, 1)
     },
@@ -535,7 +536,7 @@ function addCommonSettings(settingsTable: SettingsTable) {
   }
 
   settingsTable.displaySettingsButtonInSideMenu = {
-    title: "Display Settings Button in Side Menu",
+    title: i("settings.displaySettingsButtonInSideMenu"),
     defaultValue: !(
       typeof GM === "object" && typeof GM.registerMenuCommand === "function"
     ),
