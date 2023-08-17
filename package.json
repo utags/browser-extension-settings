@@ -4,6 +4,9 @@
   "description": "Settings module for developing browser extensions and userscripts",
   "type": "module",
   "main": "./lib/index.ts",
+  "exports": {
+    ".": "./lib/index.ts"
+  },
   "scripts": {
     "p": "prettier --write .",
     "lint": "run-s lint:*",
@@ -27,7 +30,7 @@
   },
   "homepage": "https://github.com/utags/browser-extension-settings#readme",
   "dependencies": {
-    "browser-extension-i18n": "^0.0.4",
+    "browser-extension-i18n": "^0.0.6",
     "browser-extension-storage": "^0.1.2",
     "browser-extension-utils": "^0.1.17"
   },
