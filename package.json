@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/utags/browser-extension-settings#readme",
   "dependencies": {
+    "browser-extension-i18n": "^0.0.4",
     "browser-extension-storage": "^0.1.2",
     "browser-extension-utils": "^0.1.17"
   },
