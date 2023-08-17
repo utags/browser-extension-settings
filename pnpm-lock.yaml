@@ -2,8 +2,8 @@ lockfileVersion: '6.0'
 
 dependencies:
   browser-extension-i18n:
-    specifier: ^0.0.4
-    version: 0.0.4
+    specifier: ^0.0.6
+    version: 0.0.6
   browser-extension-storage:
     specifier: ^0.1.2
     version: 0.1.2
@@ -668,8 +668,8 @@ packages:
       fill-range: 7.0.1
     dev: true
 
-  /browser-extension-i18n@0.0.4:
-    resolution: {integrity: sha512-EacSDgYklKeycwpy7LW0RME4cWw/nWP8pYCZFiJp2ymCNBfut0km0zpTVzCkPs4ckpjnorF+7MFD4z2QaceCpg==}
+  /browser-extension-i18n@0.0.6:
+    resolution: {integrity: sha512-ccxgHtRViFUWljyXNesq4Ur8btKtflD+rQvX4rjrbwK6Vqf0TeCPvaRZXAvnZNZYQH6PCH8o5c2+bPyUUCaWCg==}
     engines: {node: ^14.13.1 || >=16.0.0}
     dev: false
 
