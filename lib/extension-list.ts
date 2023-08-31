@@ -205,7 +205,7 @@ export function createExtensionList(installedExtensions: InstalledExtension[]) {
     class: "extension_list_container thin_scrollbar",
   })
 
-  addElement(div, "h1", { textContent: "Settings" })
+  addElement(div, "h1", { textContent: i("settings.title") })
 
   const div2 = addElement(div, "div", {
     class: "installed_extension_list",
@@ -221,7 +221,7 @@ export function createExtensionList(installedExtensions: InstalledExtension[]) {
     div2.append(element)
   }
 
-  addElement(div, "h2", { textContent: "Other Extensions" })
+  addElement(div, "h2", { textContent: i("settings.otherExtensions") })
   const div3 = addElement(div, "div", {
     class: "related_extension_list",
   })
