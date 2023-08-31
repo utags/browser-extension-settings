@@ -55,6 +55,7 @@ type SettingsSwitchItem = {
   icon?: string
   defaultValue: boolean
   type?: "switch"
+  onConfirmChange?: (checked: boolean) => boolean
   group?: number
 }
 
@@ -359,7 +360,21 @@ function createSettingsElement() {
               async onchange(event: Event) {
                 const checkbox = event.target as HTMLInputElement
                 if (checkbox) {
-                  await saveSettingsValue(key, checkbox.checked)
+                  let result = true
+                  if (
+                    typeof (item as SettingsSwitchItem).onConfirmChange ===
+                    "function"
+                  ) {
+                    result = (item as SettingsSwitchItem).onConfirmChange!(
+                      checkbox.checked
+                    )
+                  }
+
+                  if (result) {
+                    await saveSettingsValue(key, checkbox.checked)
+                  } else {
+                    checkbox.checked = !checkbox.checked
+                  }
                 }
               },
             })
