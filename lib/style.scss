@@ -329,7 +329,7 @@
 
   /* https://uiverse.io/zanina-yassine/afraid-eel-50 */
   /* The switch - the box around the slider */
-  .container {
+  .bes_switch_container {
     --button-width: 51px;
     --button-height: 24px;
     --toggle-diameter: 20px;
@@ -352,7 +352,7 @@
     position: absolute;
   }
 
-  .switch {
+  .bes_switch {
     width: 100%;
     height: 100%;
     display: block;
@@ -363,12 +363,12 @@
     transition: all 0.2s ease-out;
   }
 
-  .switch::before {
+  .bes_switch::before {
     display: none;
   }
 
   /* The slider */
-  .slider {
+  .bes_slider {
     width: var(--toggle-diameter);
     height: var(--toggle-diameter);
     position: absolute;
@@ -383,11 +383,11 @@
     cursor: pointer;
   }
 
-  input[type="checkbox"]:checked + .switch {
+  input[type="checkbox"]:checked + .bes_switch {
     background-color: var(--color-on);
   }
 
-  input[type="checkbox"]:checked + .switch .slider {
+  input[type="checkbox"]:checked + .bes_switch .bes_slider {
     left: calc(var(--button-width) - var(--toggle-diameter) - 2px);
   }
 }

@@ -10,14 +10,14 @@ type SwichOptions = {
 }
 
 export function createSwitch(options = {} as SwichOptions): HTMLElement {
-  const container = createElement("label", { class: "container" })
+  const container = createElement("label", { class: "bes_switch_container" })
   const checkbox = createElement(
     "input",
     options.checked ? { type: "checkbox", checked: "" } : { type: "checkbox" }
   )
   addElement(container, checkbox)
-  const switchElm = createElement("span", { class: "switch" })
-  addElement(switchElm, "span", { class: "slider" })
+  const switchElm = createElement("span", { class: "bes_switch" })
+  addElement(switchElm, "span", { class: "bes_slider" })
   addElement(container, switchElm)
   if (options.onchange) {
     addEventListener(checkbox, "change", options.onchange)
