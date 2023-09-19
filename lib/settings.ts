@@ -321,7 +321,7 @@ function createSettingsElement() {
     })
 
     addElement(settingsMain, "a", {
-      textContent: "Settings",
+      textContent: i("settings.title"),
       class: "navigation_go_previous",
       onclick() {
         activeExtensionList()
