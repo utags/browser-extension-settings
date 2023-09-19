@@ -434,20 +434,20 @@
   #browser_extension_settings_container {
     right: 10px;
 
-    .extension_list_container {
-      display: none;
-    }
-    .extension_list_container.bes_active {
-      display: block;
-    }
-    .extension_list_container.bes_active + div {
-      display: none;
-    }
-  }
+    .browser_extension_settings_wrapper {
+      a.navigation_go_previous {
+        display: block;
+      }
 
-  #browser_extension_settings_main {
-    a.navigation_go_previous {
-      display: block;
+      .extension_list_container {
+        display: none;
+      }
+      .extension_list_container.bes_active {
+        display: block;
+      }
+      .extension_list_container.bes_active + div {
+        display: none;
+      }
     }
   }
 }
