@@ -5,4 +5,4 @@ export {
   getSettingsValue,
   saveSettingsValues,
   resetSettingsValues,
-} from "./settings"
+} from "./settings.js"

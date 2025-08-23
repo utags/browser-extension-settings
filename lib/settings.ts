@@ -18,16 +18,16 @@ import {
   runWhenHeadExists,
 } from "browser-extension-utils"
 import styleText from "data-text:./style.scss"
-import { createSwitchOption } from "./switch"
+import { createSwitchOption } from "./switch.js"
 import {
   createExtensionList,
   addCurrentExtension,
   activeExtension,
   activeExtensionList,
   deactiveExtensionList,
-} from "./extension-list"
-import { besVersion, settingButton } from "./common"
-import { i } from "./messages"
+} from "./extension-list.js"
+import { besVersion, settingButton } from "./common.js"
+import { i, prefferedLocale, resetI18n } from "./messages/index.js"
 
 const prefix = "browser_extension_settings_"
 
@@ -82,9 +82,9 @@ type SettingsSelectItem = {
   title: string
   icon?: string
   type: "select"
-  options: { string: { string: any } }
+  options: Record<string, string | number>
   group?: number
-  defaultValue?: any
+  defaultValue?: string | number
 }
 
 type SettingsTipItem = {
@@ -179,6 +179,23 @@ const closeModal = () => {
 
 export function hideSettings() {
   closeModal()
+}
+
+function destroySettings() {
+  closeModal()
+  const settingsContainer = getSettingsContainer()
+  if (settingsContainer) {
+    settingsContainer.remove()
+  }
+}
+
+function isSettingsShown() {
+  const settingsContainer = getSettingsContainer()
+  if (settingsContainer) {
+    return settingsContainer.style.display === "block"
+  }
+
+  return false
 }
 
 const onDocumentClick = (event: Event) => {
@@ -483,7 +500,11 @@ function createSettingsElement() {
             })
             break
           }
+
           // No default
+          default: {
+            break
+          }
         }
       }
     }
@@ -551,13 +572,30 @@ function addCommonSettings(settingsTable: SettingsTable) {
     }
   }
 
+  // Switch locale
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  settingsTable.locale = {
+    title: i("settings.locale"),
+    type: "select",
+    defaultValue: prefferedLocale,
+    options: {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      English: "en",
+      中文: "zh",
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      Русский: "ru",
+    },
+    group: ++maxGroup,
+  } as SettingsSelectItem
+
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   settingsTable.displaySettingsButtonInSideMenu = {
     title: i("settings.displaySettingsButtonInSideMenu"),
     defaultValue: !(
       typeof GM === "object" && typeof GM.registerMenuCommand === "function"
     ),
-    group: maxGroup + 1,
-  }
+    group: ++maxGroup,
+  } as SettingsSwitchItem
 }
 
 function handleShowSettingsUrl() {
@@ -588,12 +626,31 @@ export const initSettings = async (options: SettingsOptions) => {
     // console.log(JSON.stringify(settings, null, 2))
     await updateOptions()
     addSideMenu()
+
+    const newLocale =
+      (getSettingsValue("locale") as string | undefined) || prefferedLocale
+    console.log("lastLocale:", lastLocale, "newLocale:", newLocale)
+    if (lastLocale !== newLocale) {
+      const isShown = isSettingsShown()
+      destroySettings()
+      resetI18n(newLocale)
+      lastLocale = newLocale
+      if (isShown) {
+        setTimeout(showSettings, 100)
+      }
+    }
+
     if (typeof options.onValueChange === "function") {
       options.onValueChange()
     }
   })
 
   settings = await getSettings()
+
+  let lastLocale =
+    (getSettingsValue("locale") as string | undefined) || prefferedLocale
+  resetI18n(lastLocale)
+
   runWhenHeadExists(() => {
     addStyle(getSettingsStyle())
   })

@@ -1,6 +1,7 @@
 const messages = {
   "settings.title": "Settings",
   "settings.otherExtensions": "Other Extensions",
+  "settings.locale": "Language",
   "settings.displaySettingsButtonInSideMenu": "Display Settings Button in Side Menu",
   "settings.menu.settings": "⚙️ Settings",
   "settings.extensions.utags.title": "🏷️ UTags - Add usertags to links",
