@@ -5,4 +5,5 @@ export {
   getSettingsValue,
   saveSettingsValues,
   resetSettingsValues,
-} from "./settings"
+  type SettingsTable,
+} from "./settings.js"
