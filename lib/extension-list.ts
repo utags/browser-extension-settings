@@ -7,8 +7,8 @@ import {
   createHTML,
   removeClass,
 } from "browser-extension-utils"
-import { openButton, openInNewTabButton } from "./common"
-import { i } from "./messages"
+import { openButton, openInNewTabButton } from "./common.js"
+import { i } from "./messages/index.js"
 
 type InstalledExtension = {
   id: string
