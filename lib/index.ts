@@ -5,4 +5,5 @@ export {
   getSettingsValue,
   saveSettingsValues,
   resetSettingsValues,
+  type SettingsTable,
 } from "./settings"

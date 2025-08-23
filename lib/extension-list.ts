@@ -8,7 +8,7 @@ import {
   removeClass,
 } from "browser-extension-utils"
 import { openButton, openInNewTabButton } from "./common"
-import { i } from "./messages"
+import { i } from "./messages/index"
 
 type InstalledExtension = {
   id: string
