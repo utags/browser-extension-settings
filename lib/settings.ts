@@ -17,7 +17,6 @@ import {
   runWhenDomReady,
   runWhenHeadExists,
 } from "browser-extension-utils"
-// @ts-expect-error - data-text import for build system
 import styleText from "data-text:./style.scss"
 import {
   initAvailableLocales,
@@ -128,7 +127,7 @@ const settingsContainerId = prefix + "container_" + randomId
 const settingsElementId = prefix + "main_" + randomId
 const getSettingsElement = () => $("#" + settingsElementId)
 const getSettingsStyle: () => string = () =>
-  (styleText as string)
+  styleText
     .replaceAll(/browser_extension_settings_container/gm, settingsContainerId)
     .replaceAll(/browser_extension_settings_main/gm, settingsElementId)
 const storageKey = "settings"
@@ -418,7 +417,7 @@ function createSettingsElement() {
           }
 
           case "textarea": {
-            let timeoutId: number | undefined
+            let timeoutId: ReturnType<typeof setTimeout> | undefined
             const div = addElement(optionGroup, "div", {
               class: "bes_textarea",
             })
@@ -570,7 +569,7 @@ function addSideMenu() {
       setTimeout(showSettings, 1)
     },
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    innerHTML: settingButton,
+    innerHTML: createHTML(settingButton),
   })
 }
 
@@ -704,7 +703,9 @@ export const initSettings = async (optionsProvider: () => SettingsOptions) => {
     addStyle(getSettingsStyle())
   })
 
-  registerMenuCommand(i("settings.menu.settings"), showSettings, "o")
+  void registerMenuCommand(i("settings.menu.settings"), showSettings, {
+    accessKey: "o",
+  })
 
   handleShowSettingsUrl()
 }

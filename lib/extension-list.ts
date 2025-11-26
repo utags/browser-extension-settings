@@ -68,13 +68,11 @@ const relatedExtensions: RelatedExtension[] = [
   },
 ]
 
-const getInstalledExtesionList = () => {
-  return $(".extension_list_container .installed_extension_list")
-}
+const getInstalledExtesionList = () =>
+  $(".extension_list_container .installed_extension_list")
 
-const getRelatedExtesionList = () => {
-  return $(".extension_list_container .related_extension_list")
-}
+const getRelatedExtesionList = () =>
+  $(".extension_list_container .related_extension_list")
 
 const isInstalledExtension = (id: string) => {
   const list = getInstalledExtesionList()

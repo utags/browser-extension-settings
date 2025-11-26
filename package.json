@@ -42,7 +42,7 @@
     "prettier": "^3.6.2",
     "typescript": "^5.9.3",
     "vitest": "^4.0.14",
-    "xo": "^0.60.0"
+    "xo": "^1.2.3"
   },
   "files": [
     "lib/",
@@ -51,28 +51,5 @@
   ],
   "engines": {
     "node": "^18.0.0 || ^20.0.0 || >=22.0.0"
-  },
-  "xo": {
-    "space": 2,
-    "prettier": true,
-    "globals": [
-      "GM",
-      "document"
-    ],
-    "rules": {
-      "prefer-destructuring": 0,
-      "import/extensions": 0,
-      "n/file-extension-in-import": 0,
-      "@typescript-eslint/prefer-nullish-coalescing": 0,
-      "capitalized-comments": 0
-    },
-    "overrides": [
-      {
-        "files": "lib/messages/*.ts",
-        "rules": {
-          "@typescript-eslint/naming-convention": 0
-        }
-      }
-    ]
   }
 }

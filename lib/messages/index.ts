@@ -75,7 +75,7 @@ const locales = Object.keys(localeMap)
 initAvailableLocales(locales)
 
 console.log("[settings] prefferedLocale:", getPrefferedLocale())
-// eslint-disable-next-line import/no-mutable-exports
+// eslint-disable-next-line import-x/no-mutable-exports
 export let i = initI18n(localeMap, getPrefferedLocale())
 
 export function resetI18n(locale?: string) {
