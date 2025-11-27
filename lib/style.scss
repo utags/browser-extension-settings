@@ -1,7 +1,8 @@
-#browser_extension_settings_container {
+:host {
   --browser-extension-settings-background-color: #f2f2f7;
   --browser-extension-settings-text-color: #444444;
   --browser-extension-settings-link-color: #217dfc;
+  --browser-extension-settings-border-radius: 8px;
   --sb-track-color: #00000000;
   --sb-thumb-color: #33334480;
   --sb-size: 2px;
@@ -10,23 +11,18 @@
   position: fixed;
   top: 10px;
   right: 30px;
-  max-height: 90%;
-  height: 600px;
-  overflow: hidden;
   display: none;
-
-  z-index: 100000;
-  border-radius: 5px;
+  z-index: 200000;
+  border-radius: var(--browser-extension-settings-border-radius);
   -webkit-box-shadow: 0px 10px 39px 10px rgba(62, 66, 66, 0.22);
   -moz-box-shadow: 0px 10px 39px 10px rgba(62, 66, 66, 0.22);
   box-shadow: 0px 10px 39px 10px rgba(62, 66, 66, 0.22) !important;
 
-  .browser_extension_settings_wrapper {
+  .browser_extension_settings_v2_wrapper {
     display: flex;
-    height: 100%;
-    overflow: hidden;
     background-color: var(--browser-extension-settings-background-color);
     font-family: var(--font-family);
+    border-radius: var(--browser-extension-settings-border-radius);
 
     h1,
     h2 {
@@ -77,75 +73,6 @@
         font-family: var(--font-family);
       }
     }
-
-    a.navigation_go_previous {
-      color: var(--browser-extension-settings-link-color);
-      cursor: pointer;
-      display: none;
-
-      &::before {
-        content: "< ";
-      }
-    }
-
-    .extension_list_container {
-      overflow-x: auto;
-      box-sizing: border-box;
-      padding: 10px 15px;
-      background-color: var(--browser-extension-settings-background-color);
-      color: var(--browser-extension-settings-text-color);
-
-      .installed_extension_list,
-      .related_extension_list {
-        div {
-          background-color: #fff;
-          font-size: 14px;
-          border-top: 1px solid #cccccc;
-          padding: 6px 15px 6px 15px;
-
-          a,
-          a:visited {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            text-decoration: none;
-            color: var(--browser-extension-settings-text-color);
-            font-family: var(--font-family);
-
-            &:hover {
-              text-decoration: none;
-              color: var(--browser-extension-settings-text-color);
-            }
-
-            span {
-              margin-right: 10px;
-              line-height: 24px;
-              font-family: var(--font-family);
-            }
-          }
-
-          &.active,
-          &:hover {
-            background-color: #e4e4e6;
-          }
-
-          &.active a {
-            cursor: default;
-          }
-
-          &:first-of-type {
-            border-top: none;
-            border-top-right-radius: 10px;
-            border-top-left-radius: 10px;
-          }
-          &:last-of-type {
-            border-bottom-right-radius: 10px;
-            border-bottom-left-radius: 10px;
-          }
-        }
-      }
-    }
   }
 
   .thin_scrollbar {
@@ -169,11 +96,12 @@
   }
 }
 
-#browser_extension_settings_main {
-  min-width: 250px;
-  /*max-height: 90%;*/
+.browser_extension_settings_v2_main {
+  min-width: 300px;
+  max-height: 90vh;
   overflow-y: auto;
   overflow-x: hidden;
+  border-radius: var(--browser-extension-settings-border-radius);
 
   box-sizing: border-box;
   padding: 10px 15px;
@@ -217,8 +145,11 @@
   }
 
   .option_groups textarea {
+    background-color: var(--browser-extension-settings-background-color);
+    color: var(--browser-extension-settings-text-color);
     font-size: 12px;
     margin: 10px 0 10px 0;
+    padding: 4px 8px;
     height: 100px;
     width: 100%;
     border: 1px solid darkgray;
@@ -254,6 +185,7 @@
   }
 
   .bes_option > .bes_select {
+    color: var(--browser-extension-settings-text-color);
     box-sizing: border-box;
     background-color: #fff;
     height: 24px;
@@ -287,6 +219,8 @@
       background-color: #ffffff;
       color: var(--browser-extension-settings-text-color);
       text-align: left;
+      overflow-y: auto;
+      max-height: 300px;
       padding: 10px;
       display: none;
       border-radius: 5px;
@@ -392,62 +326,12 @@
   }
 }
 
-#browser_extension_side_menu {
-  min-height: 80px;
-  width: 30px;
-  opacity: 0;
-  position: fixed;
-  top: 80px;
-  right: 0;
-  padding-top: 20px;
-  z-index: 10000;
-}
-
-#browser_extension_side_menu:hover {
-  opacity: 1;
-}
-
-#browser_extension_side_menu button {
-  cursor: pointer;
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: none;
-  background-color: transparent;
-  background-image: none;
-
-  svg {
-    width: 24px;
-    height: 24px;
-  }
-}
-
-#browser_extension_side_menu button:hover {
-  opacity: 70%;
-}
-
-#browser_extension_side_menu button:active {
-  opacity: 100%;
-}
-
 @media (max-width: 500px) {
-  #browser_extension_settings_container {
+  :host {
     right: 10px;
+  }
 
-    .browser_extension_settings_wrapper {
-      a.navigation_go_previous {
-        display: block;
-      }
-
-      .extension_list_container {
-        display: none;
-      }
-      .extension_list_container.bes_active {
-        display: block;
-      }
-      .extension_list_container.bes_active + div {
-        display: none;
-      }
-    }
+  .browser_extension_settings_v2_main {
+    max-height: 85%;
   }
 }
