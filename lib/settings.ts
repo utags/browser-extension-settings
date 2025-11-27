@@ -8,14 +8,12 @@ import {
   $$,
   addElement,
   addEventListener,
-  addStyle,
   createHTML,
   doc,
   parseInt10,
   registerMenuCommand,
   removeEventListener,
-  runWhenDomReady,
-  runWhenHeadExists,
+  createElement,
 } from "browser-extension-utils"
 import styleText from "data-text:./style.scss"
 import {
@@ -23,14 +21,7 @@ import {
   getPrefferedLocale,
 } from "browser-extension-i18n"
 import { createSwitchOption } from "./switch"
-import {
-  createExtensionList,
-  addCurrentExtension,
-  activeExtension,
-  activeExtensionList,
-  deactiveExtensionList,
-} from "./extension-list"
-import { besVersion, settingButton } from "./common"
+import { besVersion } from "./common"
 import { i, resetI18n, localeNames } from "./messages/index"
 
 // Declare GM global variable for userscript environment
@@ -41,7 +32,7 @@ declare const GM:
     }
   | undefined
 
-const prefix = "browser_extension_settings_"
+const prefix = "browser_extension_settings_v2_"
 
 type SettingsOptions = {
   id: string
@@ -116,20 +107,14 @@ type RelatedExtension = {
   url: string
 }
 
-type InstalledExtension = {
-  id: string
-  title: string
-  version: string
+const getSettingsElement = () => {
+  const wrapper = getSettingsWrapper()
+  return (
+    (wrapper?.querySelector(`.${prefix}main`) as HTMLElement | undefined) ||
+    undefined
+  )
 }
 
-const randomId = String(Math.round(Math.random() * 10_000))
-const settingsContainerId = prefix + "container_" + randomId
-const settingsElementId = prefix + "main_" + randomId
-const getSettingsElement = () => $("#" + settingsElementId)
-const getSettingsStyle: () => string = () =>
-  styleText
-    .replaceAll(/browser_extension_settings_container/gm, settingsContainerId)
-    .replaceAll(/browser_extension_settings_main/gm, settingsElementId)
 const storageKey = "settings"
 
 let settingsOptions: SettingsOptions
@@ -184,26 +169,25 @@ const closeModal = () => {
   const settingsContainer = getSettingsContainer()
   if (settingsContainer) {
     settingsContainer.style.display = "none"
+    settingsContainer.remove()
   }
 
   removeEventListener(document, "click", onDocumentClick, true)
   removeEventListener(document, "keydown", onDocumentKeyDown, true)
+  removeEventListener(
+    globalThis,
+    "beforeShowSettings",
+    onBeforeShowSettings,
+    true
+  )
 }
 
 export function hideSettings() {
   closeModal()
 }
 
-function destroySettings() {
-  closeModal()
-  const settingsContainer = getSettingsContainer()
-  if (settingsContainer) {
-    settingsContainer.remove()
-  }
-}
-
 function isSettingsShown() {
-  const settingsContainer = getSettingsContainer()
+  const settingsContainer = $(`.${prefix}container`)
   if (settingsContainer) {
     return settingsContainer.style.display === "block"
   }
@@ -212,8 +196,15 @@ function isSettingsShown() {
 }
 
 const onDocumentClick = (event: Event) => {
-  const target = event.target as HTMLElement
-  if (target?.closest(`.${prefix}container`)) {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+  const path = (event as any).composedPath?.() || []
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+  const insideContainer = path.some(
+    (node: unknown) =>
+      node instanceof HTMLElement &&
+      node.classList?.contains(`${prefix}container`)
+  )
+  if (insideContainer) {
     return
   }
 
@@ -246,8 +237,10 @@ async function updateOptions() {
       // console.log(key, type)
       switch (type) {
         case "switch": {
+          const root = getSettingsElement()!
           const checkbox = $(
-            `#${settingsElementId} .option_groups .switch_option[data-key="${key}"] input`
+            `.option_groups .switch_option[data-key="${key}"] input`,
+            root
           ) as HTMLInputElement
           if (checkbox) {
             checkbox.checked = getSettingsValue(key) as boolean
@@ -257,8 +250,10 @@ async function updateOptions() {
         }
 
         case "select": {
+          const root = getSettingsElement()!
           const options = $$(
-            `#${settingsElementId} .option_groups .select_option[data-key="${key}"] .bes_select option`
+            `.option_groups .select_option[data-key="${key}"] .bes_select option`,
+            root
           ) as HTMLOptionElement[]
 
           for (const option of options) {
@@ -269,8 +264,10 @@ async function updateOptions() {
         }
 
         case "textarea": {
+          const root = getSettingsElement()!
           const textArea = $(
-            `#${settingsElementId} .option_groups textarea[data-key="${key}"]`
+            `.option_groups textarea[data-key="${key}"]`,
+            root
           ) as HTMLTextAreaElement
           if (textArea) {
             textArea.value = getSettingsValue(key) as string
@@ -292,48 +289,59 @@ async function updateOptions() {
   }
 }
 
-function getSettingsContainer() {
+function getSettingsContainer(create = false) {
   const container = $(`.${prefix}container`)
   if (container) {
     const theVersion = parseInt10(container.dataset.besVersion, 0)
     if (theVersion < besVersion) {
-      container.id = settingsContainerId
       container.dataset.besVersion = String(besVersion)
     }
 
     return container
   }
 
-  return addElement(doc.body, "div", {
-    id: settingsContainerId,
-    class: `${prefix}container`,
-    "data-bes-version": besVersion,
-    style: "display: none;",
-  })
+  if (create) {
+    return addElement(doc.body, "div", {
+      class: `${prefix}container`,
+      "data-bes-version": besVersion,
+      style: "display: none;",
+    })
+  }
+}
+
+function getSettingsShadowRoot(): ShadowRoot | undefined {
+  const container = getSettingsContainer(true)
+  if (container?.attachShadow) {
+    return container.shadowRoot || container.attachShadow({ mode: "open" })
+  }
+
+  return undefined
 }
 
 function getSettingsWrapper() {
-  const container = getSettingsContainer()
-  return (
-    $(`.${prefix}wrapper`, container) ||
-    addElement(container, "div", {
-      class: `${prefix}wrapper`,
-    })
-  )
-}
-
-function initExtensionList() {
-  const wrapper = getSettingsWrapper()
-  if (!$(".extension_list_container", wrapper)) {
-    const list = createExtensionList([])
-    wrapper.append(list)
+  const shadow = getSettingsShadowRoot()
+  if (!shadow) {
+    const container = getSettingsContainer(true)!
+    return (
+      $(`.${prefix}wrapper`, container) ||
+      addElement(container, "div", { class: `${prefix}wrapper` })
+    )
   }
 
-  addCurrentExtension({
-    id: settingsOptions.id,
-    title: settingsOptions.title,
-    onclick: showSettings,
-  })
+  let wrapper = shadow.querySelector(`.${prefix}wrapper`)
+  if (!wrapper) {
+    wrapper = createElement("div", { class: `${prefix}wrapper` })
+    shadow.append(wrapper)
+
+    const existStyle = shadow.querySelector(`style`)
+    if (!existStyle) {
+      const styleElm = createElement("style")
+      styleElm.textContent = styleText
+      shadow.append(styleElm)
+    }
+  }
+
+  return wrapper as HTMLElement
 }
 
 function createSettingsElement() {
@@ -346,17 +354,8 @@ function createSettingsElement() {
     }
 
     settingsMain = addElement(wrapper, "div", {
-      id: settingsElementId,
       class: `${prefix}main thin_scrollbar`,
     })
-
-    // addElement(settingsMain, "a", {
-    //   textContent: i("settings.title"),
-    //   class: "navigation_go_previous",
-    //   onclick() {
-    //     activeExtensionList()
-    //   },
-    // })
 
     if (settingsOptions.title) {
       addElement(settingsMain, "h2", { textContent: settingsOptions.title })
@@ -538,41 +537,6 @@ function createSettingsElement() {
   return settingsMain
 }
 
-function addSideMenu() {
-  if (!getSettingsValue("displaySettingsButtonInSideMenu")) {
-    return
-  }
-
-  const menu =
-    $("#browser_extension_side_menu") ||
-    addElement(doc.body, "div", {
-      id: "browser_extension_side_menu",
-      "data-bes-version": besVersion,
-    })
-
-  const button = $("button[data-bes-version]", menu)
-
-  if (button) {
-    const theVersion = parseInt10(button.dataset.besVersion, 0)
-    if (theVersion >= besVersion) {
-      return
-    }
-
-    button.remove()
-  }
-
-  addElement(menu, "button", {
-    type: "button",
-    "data-bes-version": besVersion,
-    title: i("settings.menu.settings"),
-    onclick() {
-      setTimeout(showSettings, 1)
-    },
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    innerHTML: createHTML(settingButton),
-  })
-}
-
 function addCommonSettings(settingsTable: SettingsTable) {
   let maxGroup = 0
   for (const key in settingsTable) {
@@ -613,8 +577,22 @@ function handleShowSettingsUrl() {
   }
 }
 
+function onBeforeShowSettings() {
+  // Close opened modal before showing settings from other extension
+  closeModal()
+}
+
 export async function showSettings() {
-  const settingsContainer = getSettingsContainer()
+  // Close opened modal before showing settings
+  closeModal()
+
+  const event = new CustomEvent("beforeShowSettings")
+  globalThis.dispatchEvent(event)
+
+  // Listen to beforeShowSettings event to close opened modal before showing settings from other extension
+  addEventListener(globalThis, "beforeShowSettings", onBeforeShowSettings, true)
+
+  const settingsContainer = getSettingsContainer(true)!
 
   const settingsMain = createSettingsElement()
   await updateOptions()
@@ -673,7 +651,7 @@ export const initSettings = async (optionsProvider: () => SettingsOptions) => {
     console.log("lastLocale:", lastLocale, "newLocale:", newLocale)
     if (lastLocale !== newLocale) {
       const isShown = isSettingsShown()
-      destroySettings()
+      closeModal()
       resetI18n(newLocale)
       lastLocale = newLocale
 
@@ -698,10 +676,6 @@ export const initSettings = async (optionsProvider: () => SettingsOptions) => {
   setTimeout(() => {
     resetSettingsUI(optionsProvider)
   }, 50)
-
-  runWhenHeadExists(() => {
-    addStyle(getSettingsStyle())
-  })
 
   void registerMenuCommand(i("settings.menu.settings"), showSettings, {
     accessKey: "o",
