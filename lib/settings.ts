@@ -168,7 +168,6 @@ export function getSettingsValue(key: string): boolean | string | undefined {
 const closeModal = () => {
   const settingsContainer = getSettingsContainer()
   if (settingsContainer) {
-    settingsContainer.style.display = "none"
     settingsContainer.remove()
   }
 
@@ -188,11 +187,8 @@ export function hideSettings() {
 
 function isSettingsShown() {
   const settingsContainer = $(`.${prefix}container`)
-  if (settingsContainer) {
-    return settingsContainer.style.display === "block"
-  }
 
-  return false
+  return Boolean(settingsContainer)
 }
 
 const onDocumentClick = (event: Event) => {
@@ -301,10 +297,9 @@ function getSettingsContainer(create = false) {
   }
 
   if (create) {
-    return addElement(doc.body, "div", {
+    return addElement(doc.documentElement, "div", {
       class: `${prefix}container`,
       "data-bes-version": besVersion,
-      style: "display: none;",
     })
   }
 }
@@ -355,6 +350,18 @@ function createSettingsElement() {
 
     settingsMain = addElement(wrapper, "div", {
       class: `${prefix}main thin_scrollbar`,
+    })
+
+    const header = addElement(settingsMain, "header", {
+      style: "display: flex; justify-content: flex-end;",
+    })
+    addElement(header, "div", {
+      class: `close-button`,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      innerHTML: createHTML(
+        `<svg viewBox="0 0 24 24" width="100%" height="100%" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`
+      ),
+      onclick: hideSettings,
     })
 
     if (settingsOptions.title) {
@@ -587,16 +594,14 @@ export async function showSettings() {
   closeModal()
 
   const event = new CustomEvent("beforeShowSettings")
+  // Dispatch beforeShowSettings event to close other extension's settings
   globalThis.dispatchEvent(event)
 
   // Listen to beforeShowSettings event to close opened modal before showing settings from other extension
   addEventListener(globalThis, "beforeShowSettings", onBeforeShowSettings, true)
 
-  const settingsContainer = getSettingsContainer(true)!
-
-  const settingsMain = createSettingsElement()
+  createSettingsElement()
   await updateOptions()
-  settingsContainer.style.display = "block"
 
   addEventListener(document, "click", onDocumentClick, true)
   addEventListener(document, "keydown", onDocumentKeyDown, true)
@@ -648,7 +653,7 @@ export const initSettings = async (optionsProvider: () => SettingsOptions) => {
 
     const newLocale =
       (getSettingsValue("locale") as string | undefined) || getPrefferedLocale()
-    console.log("lastLocale:", lastLocale, "newLocale:", newLocale)
+    // console.log("lastLocale:", lastLocale, "newLocale:", newLocale)
     if (lastLocale !== newLocale) {
       const isShown = isSettingsShown()
       closeModal()
