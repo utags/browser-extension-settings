@@ -1,4 +1,5 @@
 :host {
+  all: initial;
   --browser-extension-settings-background-color: #f2f2f7;
   --browser-extension-settings-text-color: #444444;
   --browser-extension-settings-link-color: #217dfc;
@@ -8,17 +9,16 @@
   --sb-size: 2px;
   --font-family: "helvetica neue", "microsoft yahei", arial, sans-serif;
 
-  position: fixed;
-  top: 10px;
-  right: 30px;
-  display: none;
-  z-index: 200000;
-  border-radius: var(--browser-extension-settings-border-radius);
-  -webkit-box-shadow: 0px 10px 39px 10px rgba(62, 66, 66, 0.22);
-  -moz-box-shadow: 0px 10px 39px 10px rgba(62, 66, 66, 0.22);
-  box-shadow: 0px 10px 39px 10px rgba(62, 66, 66, 0.22) !important;
-
   .browser_extension_settings_v2_wrapper {
+    position: fixed;
+    top: 10px;
+    right: 30px;
+    display: none;
+    z-index: 2147483647;
+    border-radius: var(--browser-extension-settings-border-radius);
+    -webkit-box-shadow: 0px 10px 39px 10px rgba(62, 66, 66, 0.22);
+    -moz-box-shadow: 0px 10px 39px 10px rgba(62, 66, 66, 0.22);
+    box-shadow: 0px 10px 39px 10px rgba(62, 66, 66, 0.22) !important;
     display: flex;
     background-color: var(--browser-extension-settings-background-color);
     font-family: var(--font-family);
@@ -112,6 +112,18 @@
   h2 {
     text-align: center;
     margin: 5px 0 0;
+  }
+
+  .close-button {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    opacity: 0.5;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 1;
+    }
   }
 
   .option_groups {
