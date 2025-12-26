@@ -17,6 +17,7 @@ const xoConfig = [
       "import-x/extensions": 0,
       "n/file-extension-in-import": 0,
       "@typescript-eslint/prefer-nullish-coalescing": 0,
+      "@typescript-eslint/prefer-optional-chain": 0,
       "capitalized-comments": 0,
     },
   },

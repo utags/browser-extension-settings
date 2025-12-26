@@ -172,17 +172,23 @@ const closeModal = () => {
     settingsContainer.remove()
   }
 
-  removeEventListener(document, "click", onDocumentClick, true)
-  removeEventListener(document, "keydown", onDocumentKeyDown, true)
-  removeEventListener(
-    globalThis,
-    "beforeShowSettings",
-    onBeforeShowSettings,
-    true
-  )
+  removeEventListener(doc, "click", onDocumentClick, true)
+  removeEventListener(doc, "keydown", onDocumentKeyDown, true)
+  removeEventListener(win, "beforeShowSettings", onBeforeShowSettings, true)
 }
 
 export function hideSettings() {
+  if (win.self !== win.top) {
+    win.top?.postMessage(
+      {
+        type: "bes-hide-settings",
+        id: settingsOptions?.id,
+      },
+      "*"
+    )
+    return
+  }
+
   closeModal()
 }
 
@@ -591,24 +597,32 @@ function onBeforeShowSettings() {
 }
 
 export async function showSettings() {
+  // Close opened modal before showing settings
   if (win.self !== win.top) {
+    win.top?.postMessage(
+      {
+        type: "bes-show-settings",
+        id: settingsOptions?.id,
+      },
+      "*"
+    )
     return
   }
-  // Close opened modal before showing settings
+
   closeModal()
 
   const event = new CustomEvent("beforeShowSettings")
   // Dispatch beforeShowSettings event to close other extension's settings
-  globalThis.dispatchEvent(event)
+  win.dispatchEvent(event)
 
   // Listen to beforeShowSettings event to close opened modal before showing settings from other extension
-  addEventListener(globalThis, "beforeShowSettings", onBeforeShowSettings, true)
+  addEventListener(win, "beforeShowSettings", onBeforeShowSettings, true)
 
   createSettingsElement()
   await updateOptions()
 
-  addEventListener(document, "click", onDocumentClick, true)
-  addEventListener(document, "keydown", onDocumentKeyDown, true)
+  addEventListener(doc, "click", onDocumentClick, true)
+  addEventListener(doc, "keydown", onDocumentKeyDown, true)
   // activeExtension(settingsOptions.id)
   // deactiveExtensionList()
 }
@@ -688,6 +702,18 @@ export const initSettings = async (optionsProvider: () => SettingsOptions) => {
 
   void registerMenuCommand(i("settings.menu.settings"), showSettings, {
     accessKey: "o",
+  })
+
+  addEventListener(win, "message", (event: MessageEvent) => {
+    if (!event.data || event.data.id !== settingsOptions?.id) {
+      return
+    }
+
+    if (event.data.type === "bes-show-settings") {
+      void showSettings()
+    } else if (event.data.type === "bes-hide-settings") {
+      hideSettings()
+    }
   })
 
   handleShowSettingsUrl()
