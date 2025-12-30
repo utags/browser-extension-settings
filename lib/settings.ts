@@ -25,14 +25,6 @@ import { createSwitchOption } from "./switch"
 import { besVersion } from "./common"
 import { i, resetI18n, localeNames } from "./messages/index"
 
-// Declare GM global variable for userscript environment
-// eslint-disable-next-line @typescript-eslint/naming-convention
-declare const GM:
-  | {
-      registerMenuCommand?: (name: string, function_: () => void) => void
-    }
-  | undefined
-
 const prefix = "browser_extension_settings_v2_"
 
 type SettingsOptions = {
@@ -123,11 +115,16 @@ let settingsTable: SettingsTable = {}
 let settings = {}
 async function getSettings() {
   return (
-    ((await getValue(storageKey)) as Record<string, unknown> | undefined) ?? {}
+    (await getValue<Record<string, boolean | string | undefined>>(
+      storageKey
+    )) ?? {}
   )
 }
 
-async function saveSettingsValue(key: string, value: any) {
+async function saveSettingsValue(
+  key: string,
+  value: boolean | string | undefined
+) {
   const settings = await getSettings()
   settings[key] =
     settingsTable[key] && settingsTable[key].defaultValue === value
@@ -288,7 +285,7 @@ async function updateOptions() {
 
   if (typeof settingsOptions.onViewUpdate === "function") {
     const settingsMain = createSettingsElement()
-    settingsOptions.onViewUpdate(settingsMain)
+    settingsOptions.onViewUpdate(settingsMain!)
   }
 }
 
@@ -379,11 +376,10 @@ function createSettingsElement() {
     const getOptionGroup = (index: number) => {
       if (index > optionGroups.length) {
         for (let i = optionGroups.length; i < index; i++) {
-          optionGroups.push(
-            addElement(settingsMain!, "div", {
-              class: "option_groups",
-            })
-          )
+          const optionGroup = addElement(settingsMain, "div", {
+            class: "option_groups",
+          })
+          if (optionGroup) optionGroups.push(optionGroup)
         }
       }
 
@@ -537,7 +533,7 @@ function createSettingsElement() {
 
     if (settingsOptions.footer) {
       const footer = addElement(settingsMain, "footer")
-      footer.innerHTML = createHTML(
+      footer!.innerHTML = createHTML(
         typeof settingsOptions.footer === "string"
           ? settingsOptions.footer
           : `<p>Made with ❤️ by
@@ -663,7 +659,7 @@ const resetSettingsUI = (optionsProvider: () => SettingsOptions) => {
 }
 
 export const initSettings = async (optionsProvider: () => SettingsOptions) => {
-  addValueChangeListener(storageKey, async () => {
+  await addValueChangeListener(storageKey, async () => {
     settings = await getSettings()
     // console.log(JSON.stringify(settings, null, 2))
     await updateOptions()
