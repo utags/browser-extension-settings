@@ -157,10 +157,12 @@ export async function saveSettingsValues(
   await setValue(storageKey, settings)
 }
 
-export function getSettingsValue(key: string): boolean | string | undefined {
+export function getSettingsValue<T = boolean | string | undefined>(
+  key: string
+): T {
   return Object.hasOwn(settings, key)
-    ? (settings[key] as boolean | string | undefined)
-    : (settingsTable[key]?.defaultValue as boolean | string | undefined)
+    ? (settings[key] as T)
+    : (settingsTable[key]?.defaultValue as T)
 }
 
 const closeModal = () => {
@@ -243,7 +245,7 @@ async function updateOptions() {
             root
           ) as HTMLInputElement
           if (checkbox) {
-            checkbox.checked = getSettingsValue(key) as boolean
+            checkbox.checked = getSettingsValue(key)
           }
 
           break
@@ -270,7 +272,7 @@ async function updateOptions() {
             root
           ) as HTMLTextAreaElement
           if (textArea) {
-            textArea.value = getSettingsValue(key) as string
+            textArea.value = getSettingsValue(key)
           }
 
           break
@@ -628,8 +630,7 @@ let lastLocale: string | undefined
 // Reset settings UI on init and locale change
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const resetSettingsUI = (optionsProvider: () => SettingsOptions) => {
-  lastLocale =
-    (getSettingsValue("locale") as string | undefined) || getPrefferedLocale()
+  lastLocale = getSettingsValue("locale") || getPrefferedLocale()
   resetI18n(lastLocale)
 
   const options = optionsProvider()
@@ -666,7 +667,7 @@ export const initSettings = async (optionsProvider: () => SettingsOptions) => {
     // addSideMenu()
 
     const newLocale =
-      (getSettingsValue("locale") as string | undefined) || getPrefferedLocale()
+      getSettingsValue<string | undefined>("locale") || getPrefferedLocale()
     // console.log("lastLocale:", lastLocale, "newLocale:", newLocale)
     if (lastLocale !== newLocale) {
       const isShown = isSettingsShown()
