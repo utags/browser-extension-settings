@@ -15,8 +15,8 @@ importers:
         specifier: ^0.2.8
         version: 0.2.8
       browser-extension-utils:
-        specifier: ^0.3.3
-        version: 0.3.3
+        specifier: ^0.3.4
+        version: 0.3.4
     devDependencies:
       '@types/chrome':
         specifier: ^0.1.32
@@ -942,8 +942,8 @@ packages:
     resolution: {integrity: sha512-jEX8Ze7rG65DZLuzofxBA2xLlo0VzS59tpuWwkwK//1VTjWQN93NCCn6LWHhaqUJWnZ4I1aHRLnvdttaAVINYA==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
 
-  browser-extension-utils@0.3.3:
-    resolution: {integrity: sha512-m7d7raREOvBfbvrJOpi8GRoeySOOlpsOxl9LM0UDwLpdCVdbYOozhRxBvU45IReqTY+geRfcSbBFbPXUG63Hsg==}
+  browser-extension-utils@0.3.4:
+    resolution: {integrity: sha512-VuZWcD4AiZOLbl0bVaE522MlgRNtH+daBqIbC9DVr3yrZAjns0Jgx3veZtAg/Q0+4f/kzIkFTpn6thsM9H/vSQ==}
     engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
 
   browserslist@4.25.3:
@@ -3713,7 +3713,7 @@ snapshots:
     transitivePeerDependencies:
       - react
 
-  browser-extension-utils@0.3.3: {}
+  browser-extension-utils@0.3.4: {}
 
   browserslist@4.25.3:
     dependencies:
