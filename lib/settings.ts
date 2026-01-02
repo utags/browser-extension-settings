@@ -549,7 +549,10 @@ function createSettingsElement() {
   return settingsMain
 }
 
-function addCommonSettings(settingsTable: SettingsTable) {
+function addCommonSettings(
+  settingsTable: SettingsTable,
+  options: { locale?: boolean }
+) {
   let maxGroup = 0
   for (const key in settingsTable) {
     if (Object.hasOwn(settingsTable, key)) {
@@ -561,15 +564,17 @@ function addCommonSettings(settingsTable: SettingsTable) {
     }
   }
 
-  // Switch locale
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  settingsTable.locale = {
-    title: i("settings.locale"),
-    type: "select",
-    defaultValue: "",
-    options: {},
-    group: ++maxGroup,
-  } as SettingsSelectItem
+  if (options.locale) {
+    // Switch locale
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+    settingsTable.locale = {
+      title: i("settings.locale"),
+      type: "select",
+      defaultValue: "",
+      options: {},
+      group: ++maxGroup,
+    } as SettingsSelectItem
+  }
 
   // // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   // settingsTable.displaySettingsButtonInSideMenu = {
@@ -635,9 +640,11 @@ const resetSettingsUI = (optionsProvider: () => SettingsOptions) => {
 
   const options = optionsProvider()
   settingsOptions = options
-  settingsTable = options.settingsTable || {}
-  addCommonSettings(settingsTable)
+  settingsTable = structuredClone(options.settingsTable || {})
   const availableLocales = options.availableLocales
+  addCommonSettings(settingsTable, {
+    locale: Boolean(availableLocales?.length),
+  })
   if (availableLocales?.length) {
     initAvailableLocales(availableLocales)
     const localeSelect = settingsTable.locale as SettingsSelectItem
