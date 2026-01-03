@@ -640,7 +640,7 @@ const resetSettingsUI = (optionsProvider: () => SettingsOptions) => {
 
   const options = optionsProvider()
   settingsOptions = options
-  settingsTable = structuredClone(options.settingsTable || {})
+  settingsTable = { ...options.settingsTable }
   const availableLocales = options.availableLocales
   addCommonSettings(settingsTable, {
     locale: Boolean(availableLocales?.length),
