@@ -113,12 +113,17 @@ const storageKey = "settings"
 let settingsOptions: SettingsOptions
 let settingsTable: SettingsTable = {}
 let settings = {}
-async function getSettings() {
-  return (
-    (await getValue<Record<string, boolean | string | undefined>>(
-      storageKey
-    )) ?? {}
-  )
+async function getSettings(): Promise<
+  Record<string, string | boolean | undefined>
+> {
+  let settings =
+    await getValue<Record<string, boolean | string | undefined>>(storageKey)
+
+  if (!settings || typeof settings !== "object") {
+    settings = {}
+  }
+
+  return settings
 }
 
 async function saveSettingsValue(
