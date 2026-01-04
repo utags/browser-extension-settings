@@ -1,37 +1,37 @@
 /** @type {import('xo').FlatXoConfig} */
 const xoConfig = [
   {
-    ignores: ["scripts/patch.js", "scripts/patch.cjs", "build/**/*"],
+    ignores: ['scripts/patch.js', 'scripts/patch.cjs', 'build/**/*'],
   },
   {
-    files: ["**/*.{js,jsx,ts,tsx,mjs,cjs}"],
+    files: ['**/*.{js,jsx,ts,tsx,mjs,cjs}'],
     space: 2,
-    prettier: "compat",
+    prettier: 'compat',
     languageOptions: {
       globals: {
-        document: "readonly",
+        document: 'readonly',
       },
     },
     rules: {
-      "prefer-destructuring": 0,
-      "import-x/extensions": 0,
-      "n/file-extension-in-import": 0,
-      "@typescript-eslint/prefer-nullish-coalescing": 0,
-      "@typescript-eslint/prefer-optional-chain": 0,
-      "capitalized-comments": 0,
+      'prefer-destructuring': 0,
+      'import-x/extensions': 0,
+      'n/file-extension-in-import': 0,
+      '@typescript-eslint/prefer-nullish-coalescing': 0,
+      '@typescript-eslint/prefer-optional-chain': 0,
+      'capitalized-comments': 0,
     },
   },
   {
-    files: ["lib/**/*.ts"],
+    files: ['lib/**/*.ts'],
     rules: {
-      "@stylistic/indent": 0,
-      "@stylistic/indent-binary-ops": 0,
+      '@stylistic/indent': 0,
+      '@stylistic/indent-binary-ops': 0,
     },
   },
   {
-    files: ["lib/messages/*.ts"],
+    files: ['lib/messages/*.ts'],
     rules: {
-      "@typescript-eslint/naming-convention": 0,
+      '@typescript-eslint/naming-convention': 0,
     },
   },
 ]

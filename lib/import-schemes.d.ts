@@ -1,4 +1,4 @@
-declare module "data-text:*" {
+declare module 'data-text:*' {
   const content: string
   export default content
 }
