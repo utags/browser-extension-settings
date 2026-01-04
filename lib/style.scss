@@ -4,6 +4,11 @@
   --browser-extension-settings-text-color: #444444;
   --browser-extension-settings-link-color: #217dfc;
   --browser-extension-settings-border-radius: 8px;
+  --browser-extension-settings-group-background-color: #ffffff;
+  --browser-extension-settings-group-separator-color: #cccccc;
+  --darkreader-border--browser-extension-settings-group-background-color: #303436;
+  --darkreader-bg--browser-extension-settings-group-background-color: #303436;
+  --darkreader-bg--browser-extension-settings-group-separator-color: #181a1b;
   --sb-track-color: #00000000;
   --sb-thumb-color: #33334480;
   --sb-size: 2px;
@@ -127,11 +132,15 @@
   }
 
   .option_groups {
-    background-color: #fff;
-    padding: 6px 15px 6px 15px;
+    background-color: var(--browser-extension-settings-group-separator-color);
+    padding: 0;
+    border-style: solid;
+    border-color: var(--browser-extension-settings-group-background-color);
+    border-width: 6px 15px;
     border-radius: 10px;
     display: flex;
     flex-direction: column;
+    gap: 1px;
     margin: 10px 0 0;
   }
 
@@ -179,11 +188,7 @@
   }
 
   .option_groups > * {
-    border-top: 1px solid #cccccc;
-  }
-
-  .option_groups > *:first-child {
-    border-top: none;
+    background-color: var(--browser-extension-settings-group-background-color);
   }
 
   .bes_option > .bes_icon {
@@ -199,7 +204,7 @@
   .bes_option > .bes_select {
     color: var(--browser-extension-settings-text-color);
     box-sizing: border-box;
-    background-color: #fff;
+    background-color: var(--browser-extension-settings-group-background-color);
     height: 24px;
     padding: 0 2px 0 2px;
     margin: 0;

@@ -460,6 +460,7 @@ function createSettingsElement() {
 
           case "action": {
             addElement(optionGroup, "a", {
+              "data-key": key,
               class: "action",
               textContent: item.title,
               onclick: (item as SettingsActionItem).onclick,
@@ -474,6 +475,7 @@ function createSettingsElement() {
             })
 
             addElement(div4, "a", {
+              "data-key": key,
               textContent: item.title,
               href: (item as SettingsActionItem).url,
               target: "_blank",
