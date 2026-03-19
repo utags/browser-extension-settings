@@ -178,7 +178,7 @@ const closeModal = () => {
 
   removeEventListener(doc, 'click', onDocumentClick, true)
   removeEventListener(doc, 'keydown', onDocumentKeyDown, true)
-  removeEventListener(win, 'beforeShowSettings', onBeforeShowSettings, true)
+  removeEventListener(doc, 'beforeShowSettings', onBeforeShowSettings, true)
 }
 
 export function hideSettings() {
@@ -451,7 +451,7 @@ function createSettingsElement() {
                   if (textArea) {
                     await saveSettingsValue(key, textArea.value.trim())
                   }
-                }, 100)
+                }, 2000)
               },
             })
 
@@ -623,10 +623,10 @@ export async function showSettings() {
 
   const event = new CustomEvent('beforeShowSettings')
   // Dispatch beforeShowSettings event to close other extension's settings
-  win.dispatchEvent(event)
+  doc.dispatchEvent(event)
 
   // Listen to beforeShowSettings event to close opened modal before showing settings from other extension
-  addEventListener(win, 'beforeShowSettings', onBeforeShowSettings, true)
+  addEventListener(doc, 'beforeShowSettings', onBeforeShowSettings, true)
 
   createSettingsElement()
   await updateOptions()
